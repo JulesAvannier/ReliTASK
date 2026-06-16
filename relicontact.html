@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReliCONTACT — Fichiers de prospection | ReliTASK</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Paytone+One&display=swap" rel="stylesheet" />
+  <style>
+    .page-hero__desc { text-align: justify; }
+    .page-hero { padding-bottom: 40px; }
+    #probleme-section { padding-top: 16px; }
+
+    .problem-box {
+      border-left: none;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 0;
+      margin-bottom: 56px;
+      transition: transform 0.24s ease, box-shadow 0.24s ease;
+    }
+    .problem-box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(239,101,101,0.16);
+    }
+    .problem-box::before {
+      content: '';
+      position: absolute;
+      top: -55px; right: -55px;
+      width: 170px; height: 170px;
+      background: radial-gradient(circle, rgba(239,101,101,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .problem-box__icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: var(--coral);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .problem-box__icon svg { width: 24px; height: 24px; color: var(--white); }
+    .problem-box__content { position: relative; }
+    @media (max-width: 540px) {
+      .problem-box { gap: 14px; }
+    }
+    .status-done { background: #e6f7ed; color: #1f8a4c; }
+
+    .pricing-note--info {
+      background: var(--cyan-light);
+      color: var(--cyan-deep);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .pricing-note--info svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    .contact-preview-body { display: flex; gap: 18px; align-items: stretch; }
+    .contact-preview-table-wrap { flex: 1; min-width: 0; overflow-x: auto; }
+    .contact-preview-dashboard {
+      width: 190px;
+      flex-shrink: 0;
+      background: var(--cyan-light);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .cpd-title { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan-deep); border-bottom: 2px solid var(--cyan); padding-bottom: 8px; }
+    .cpd-stat__num { font-family: var(--font-logo); font-size: 1.8rem; color: var(--text-dark); line-height: 1; }
+    .cpd-stat__label { font-size: 0.72rem; color: var(--gray); margin-top: 4px; }
+    .cpd-progress__bar { height: 8px; background: rgba(255,255,255,0.7); border-radius: 4px; overflow: hidden; }
+    .cpd-progress__fill { height: 100%; background: var(--cyan-dark); border-radius: 4px; }
+    .cpd-progress__label { font-size: 0.7rem; color: var(--gray); margin-top: 6px; }
+    .cpd-legend { display: flex; flex-direction: column; gap: 6px; font-size: 0.72rem; color: var(--text-dark); }
+    .cpd-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+    .cpd-dot--done { background: #1f8a4c; }
+    .cpd-dot--todo { background: var(--cyan-dark); }
+    @media (max-width: 700px) {
+      .contact-preview-body { flex-direction: column; }
+      .contact-preview-dashboard { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="index.html" class="logo"><span class="reli">Reli</span><span class="task">TASK</span></a>
+    <ul class="nav-links">
+      <li><a href="relidoc.html">ReliDOC</a></li>
+      <li><a href="relicontact.html" class="active">ReliCONTACT</a></li>
+      <li><a href="relitest.html">ReliTEST</a></li>
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="devis-special.html" class="nav-special">Demande spéciale</a></li>
+      <li><a href="#contact" class="nav-cta">Obtenir un devis</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="page-hero__eyebrow">
+      <a href="index.html" class="page-hero__back">← Retour à l'accueil</a>
+      <span class="page-hero__tag">ReliCONTACT</span>
+    </div>
+    <h1 class="page-hero__title">Fini les heures perdues à <span class="accent-coral">chercher vos prospects.</span></h1>
+    <p class="page-hero__desc">Un fichier de prospection qualifié, ciblé selon vos critères précis, vérifié manuellement — livré en quelques jours. Vous n'avez plus qu'à décrocher le téléphone ou envoyer le premier email.</p>
+  </div>
+</section>
+
+<section class="section" id="probleme-section">
+  <div class="container">
+    <div class="problem-box reveal">
+      <div class="problem-box__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="stroke-width: 2;"><circle cx="12" cy="12" r="9" stroke-linecap="round" stroke-linejoin="round"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7v5l3 3"/></svg>
+      </div>
+      <div class="problem-box__content">
+        <div class="problem-box__label">Le problème</div>
+        <p>Construire un fichier de prospection vous demande beaucoup de temps et d'énergie : recherche, vérification, mise en forme, qualification. Autant d'heures en moins pour votre cœur de métier.</p>
+      </div>
+    </div>
+
+    <span class="badge reveal">Aperçu</span>
+    <h2 class="section-title reveal">Votre fichier, qualifié et prêt à l'emploi</h2>
+    <p class="section-sub reveal">Chaque prospect est vérifié : email actif, poste confirmé, secteur correspondant à vos critères.</p>
+
+    <div class="contact-preview reveal">
+      <div class="contact-preview-inner">
+        <div class="contact-preview-header">
+          <div class="contact-preview-logo">Reli<span>TASK</span> — Fichier de prospection</div>
+          <div style="font-size:11px; color:var(--gray);">Secteur : <strong>SaaS B2B</strong> · Région : <strong>Île-de-France</strong> · 120 contacts</div>
+        </div>
+        <div class="contact-preview-body">
+        <div class="contact-preview-table-wrap">
+        <table class="contact-preview-table">
+          <thead>
+            <tr>
+              <th>Prénom</th>
+              <th>Nom</th>
+              <th>Poste</th>
+              <th>Entreprise</th>
+              <th>Email</th>
+              <th>Tél.</th>
+              <th>Effectif</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Sophie</td>
+              <td>Martin</td>
+              <td>DG</td>
+              <td>Atelier Numérique</td>
+              <td>s.martin@ateliernumerique.fr</td>
+              <td>06 12 34 56 78</td>
+              <td>12 sal.</td>
+              <td><span class="status-badge status-done">Contacté</span></td>
+            </tr>
+            <tr>
+              <td>Thomas</td>
+              <td>Leroy</td>
+              <td>Dir. Commercial</td>
+              <td>Nexbridge</td>
+              <td>t.leroy@nexbridge.io</td>
+              <td>07 98 76 54 32</td>
+              <td>45 sal.</td>
+              <td><span class="status-badge status-done">Contacté</span></td>
+            </tr>
+            <tr>
+              <td>Claire</td>
+              <td>Dupont</td>
+              <td>PDG</td>
+              <td>DigitalCore</td>
+              <td>c.dupont@digitalcore.fr</td>
+              <td>06 55 44 33 22</td>
+              <td>8 sal.</td>
+              <td><span class="status-badge status-cold">À contacter</span></td>
+            </tr>
+            <tr class="blur-row">
+              <td>Marc</td>
+              <td>Fontaine</td>
+              <td>CEO</td>
+              <td>TechStart Paris</td>
+              <td>m.fontaine@techstart.fr</td>
+              <td>06 XX XX XX XX</td>
+              <td>22 sal.</td>
+              <td><span class="status-badge status-cold">À contacter</span></td>
+            </tr>
+            <tr class="blur-row">
+              <td>Julie</td>
+              <td>Bernard</td>
+              <td>Dir. Marketing</td>
+              <td>Cooptalis</td>
+              <td>j.bernard@cooptalis.com</td>
+              <td>07 XX XX XX XX</td>
+              <td>65 sal.</td>
+              <td><span class="status-badge status-done">Contacté</span></td>
+            </tr>
+            <tr class="blur-row">
+              <td>Antoine</td>
+              <td>Moreau</td>
+              <td>Directeur</td>
+              <td>InnoScale</td>
+              <td>a.moreau@innoscale.io</td>
+              <td>06 XX XX XX XX</td>
+              <td>18 sal.</td>
+              <td><span class="status-badge status-cold">À contacter</span></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="contact-preview-dashboard">
+          <div class="cpd-title">Tableau de bord</div>
+          <div class="cpd-stat">
+            <div class="cpd-stat__num">120</div>
+            <div class="cpd-stat__label">Contacts au total</div>
+          </div>
+          <div class="cpd-progress">
+            <div class="cpd-progress__bar"><div class="cpd-progress__fill" style="width: 38%;"></div></div>
+            <div class="cpd-progress__label">46 contactés · 74 à contacter</div>
+          </div>
+          <div class="cpd-legend">
+            <div><span class="cpd-dot cpd-dot--done"></span> Contacté</div>
+            <div><span class="cpd-dot cpd-dot--todo"></span> À contacter</div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="contact-preview-overlay">
+        <p style="font-weight:700; color:var(--text-dark); font-size:1rem; margin-bottom:12px; text-align:center;">Votre fichier, qualifié et prêt à l'emploi</p>
+        <a href="#contact" class="btn btn-primary">Demander mon fichier →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing-section section--alt">
+  <div class="container">
+    <span class="badge reveal">Tarifs ReliCONTACT</span>
+    <h2 class="section-title reveal">Des forfaits clairs selon votre volume</h2>
+    <p class="section-sub reveal">Plus votre fichier est volumineux, plus le coût par contact diminue.</p>
+    <div class="pricing-grid reveal">
+      <div class="pricing-card">
+        <div class="pricing-card__label">CIBLÉ</div>
+        <div class="pricing-card__volume">30 prospects</div>
+        <div class="pricing-card__price">45€</div>
+        <div class="pricing-card__unit">/ fichier</div>
+        <div class="pricing-card__option">≈ 1,50€ / contact</div>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-card__label">ÉLARGI</div>
+        <div class="pricing-card__volume">60 prospects</div>
+        <div class="pricing-card__price">75€</div>
+        <div class="pricing-card__unit">/ fichier</div>
+        <div class="pricing-card__option">≈ 1,25€ / contact</div>
+        <div class="pricing-card__savings">−17%</div>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-card__label">CONQUÊTE</div>
+        <div class="pricing-card__volume">120 prospects</div>
+        <div class="pricing-card__price">120€</div>
+        <div class="pricing-card__unit">/ fichier</div>
+        <div class="pricing-card__option">≈ 1,00€ / contact</div>
+        <div class="pricing-card__savings">Le plus choisi · −33%</div>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-card__label">&nbsp;</div>
+        <div class="pricing-card__volume">Plus de 120 prospects</div>
+        <div class="pricing-card__price">Sur devis</div>
+        <div class="pricing-card__unit">&nbsp;</div>
+        <div class="pricing-card__option">Tarif préférentiel</div>
+      </div>
+    </div>
+    <div class="pricing-note pricing-note--info reveal">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="stroke-width: 2;"><circle cx="12" cy="12" r="9" stroke-linecap="round" stroke-linejoin="round"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 8h.01M11 12h1v4h1"/></svg>
+      Livraison en fichier Excel + CSV · Devis gratuit sous 48h · Critères de ciblage librement définis au préalable
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <span class="badge reveal">Ce qui est inclus</span>
+    <h2 class="section-title reveal">Ce que contient chaque fichier ReliCONTACT</h2>
+    <div class="includes-grid reveal">
+      <div class="includes-box includes-box--yes">
+        <div class="includes-box__title">
+          <span class="check">✓</span> Inclus dans chaque fichier
+        </div>
+        <ul>
+          <li><span class="check">✓</span> Nom, prénom, poste du décideur ciblé</li>
+          <li><span class="check">✓</span> Nom et secteur d'activité de l'entreprise</li>
+          <li><span class="check">✓</span> Email professionnel vérifié</li>
+          <li><span class="check">✓</span> Numéro de téléphone direct si disponible</li>
+          <li><span class="check">✓</span> Taille de l'entreprise (effectif estimé)</li>
+          <li><span class="check">✓</span> Localisation géographique</li>
+          <li><span class="check">✓</span> Site web de l'entreprise</li>
+          <li><span class="check">✓</span> Profil LinkedIn du décideur (si disponible)</li>
+          <li><span class="check">✓</span> Livraison en Excel + CSV</li>
+        </ul>
+      </div>
+      <div class="includes-box includes-box--no">
+        <div class="includes-box__title">
+          <span class="cross">✕</span> Non inclus
+        </div>
+        <ul>
+          <li><span class="cross">✕</span> Rédaction des emails de prospection (option disponible à préciser dans Demande spéciale)</li>
+          <li><span class="cross">✕</span> Envoi des emails pour vous</li>
+          <li><span class="cross">✕</span> Mise à jour du fichier après 3 mois</li>
+          <li><span class="cross">✕</span> Données hors RGPD (toutes les données sont collectées légalement)</li>
+          <li><span class="cross">✕</span> Garantie de réponse des prospects</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="devis-cta reveal" style="margin-top: 40px;">
+      <p><strong>Vous avez des critères très précis ?</strong> Secteur niche, géographie spécifique, poste précis — décrivez-nous votre cible idéale et on s'adapte.</p>
+      <a href="devis-special.html" class="btn-white">Demande spéciale →</a>
+    </div>
+  </div>
+</section>
+
+<section class="contact-section" id="contact">
+  <div class="container">
+    <span class="badge reveal">Demander un fichier ReliCONTACT</span>
+    <h2 class="section-title reveal">Décrivez votre cible idéale</h2>
+    <p class="section-sub reveal">Plus vous êtes précis, meilleur est le fichier. Devis gratuit sous 48h.</p>
+    <form id="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required />
+        </div>
+        <div class="form-group">
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" name="nom" placeholder="Votre nom" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="vous@exemple.com" required />
+        </div>
+        <div class="form-group">
+          <label for="volume">Volume souhaité</label>
+          <select id="volume" name="volume">
+            <option value="">Choisir un forfait</option>
+            <option value="30">CIBLÉ — 30 prospects (45€)</option>
+            <option value="60">ÉLARGI — 60 prospects (75€)</option>
+            <option value="120">CONQUÊTE — 120 prospects (120€)</option>
+            <option value="120+">Plus de 120 prospects (sur devis)</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label for="cible">Décrivez votre cible</label>
+          <textarea id="cible" name="cible" placeholder="Secteur d'activité, taille d'entreprise, poste des décideurs visés, zone géographique, autres critères…"></textarea>
+        </div>
+      </div>
+      <div class="form-submit">
+        <button type="submit" class="btn btn-white">Envoyer ma demande →</button>
+      </div>
+      <div class="form-success" id="form-success">Merci ! Votre message a bien été envoyé. Nous vous répondrons sous 48h.</div>
+    </form>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer__logo"><span class="reli">Reli</span><span class="task">TASK</span></div>
+  <div class="footer__info">SIRET : 372865328762928763 · <a href="mailto:relitask@etik.com">relitask@etik.com</a></div>
+  <div class="footer__legal">
+    <a href="mentions-legales.html">Mentions légales</a>
+    <a href="mentions-legales.html#cgv">CGV</a>
+  </div>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver((e) => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  const form = document.getElementById('contact-form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      const action = form.getAttribute('action');
+      if (action && action.includes('YOUR_FORM_ID')) {
+        e.preventDefault();
+        alert('Formulaire non configuré. Remplacez YOUR_FORM_ID par votre identifiant Formspree.');
+        return;
+      }
+      e.preventDefault();
+      fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
+        .then(r => { if (r.ok) { form.reset(); document.getElementById('form-success').style.display = 'block'; } });
+    });
+  }
+</script>
+</body>
+</html>

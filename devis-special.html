@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demande spéciale | ReliTASK</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Paytone+One&display=swap" rel="stylesheet" />
+  <style>
+    .why-v2-item { flex-direction: column; gap: 8px; }
+    .why-v2-num { font-size: 2.2rem; }
+    @media (max-width: 640px) {
+      #special-form { padding: 28px 24px !important; }
+      .special-form-header { padding: 24px 22px !important; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="index.html" class="logo"><span class="reli">Reli</span><span class="task">TASK</span></a>
+    <ul class="nav-links">
+      <li><a href="relidoc.html">ReliDOC</a></li>
+      <li><a href="relicontact.html">ReliCONTACT</a></li>
+      <li><a href="relitest.html">ReliTEST</a></li>
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="devis-special.html" class="nav-special active">Demande spéciale</a></li>
+      <li><a href="index.html#contact" class="nav-cta">Obtenir un devis</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="special-hero">
+  <div class="container">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+      <a href="index.html" class="page-hero__back">← Retour à l'accueil</a>
+    </div>
+    <h1 style="font-family: var(--font-logo); font-size: clamp(1.9rem, 4.5vw, 3rem); line-height: 1.12; max-width: 700px; margin: 16px 0 18px; color: var(--text-dark);">
+      Votre besoin ne rentre pas dans une case ? <span style="color: var(--coral);">Tant mieux.</span>
+    </h1>
+    <p style="font-size: 1.06rem; color: var(--gray); max-width: 580px;">
+      Décrivez-nous votre projet, aussi atypique soit-il. Nous étudions toutes les demandes et vous faisons une proposition adaptée sous 48h. Aucun engagement de votre côté.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container" style="max-width: 1040px;">
+
+    <div class="why-v2" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 48px;">
+      <div class="why-v2-item reveal">
+        <div class="why-v2-num">01</div>
+        <div>
+          <div class="why-v2-tag">Sur mesure</div>
+          <h4>Besoin atypique</h4>
+          <p>Veille sectorielle, traduction, audit, recherche documentaire… On étudie tout.</p>
+        </div>
+      </div>
+      <div class="why-v2-item reveal reveal-delay-1">
+        <div class="why-v2-num">02</div>
+        <div>
+          <div class="why-v2-tag">Réactivité</div>
+          <h4>Réponse sous 48h</h4>
+          <p>Un retour rapide avec une proposition concrète ou un refus honnête si ce n'est pas dans nos cordes.</p>
+        </div>
+      </div>
+      <div class="why-v2-item reveal reveal-delay-2">
+        <div class="why-v2-num">03</div>
+        <div>
+          <div class="why-v2-tag">Sans risque</div>
+          <h4>Sans engagement</h4>
+          <p>La demande de devis est totalement gratuite. Vous n'êtes engagé qu'en cas d'accord explicite.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow-hover); overflow: hidden; border: 1.5px solid rgba(112,212,219,0.2);">
+      <div class="special-form-header" style="background: linear-gradient(135deg, var(--cyan-deep), var(--cyan-richer)); padding: 32px 36px; color: white; display: flex; align-items: center; gap: 18px; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -50px; right: -50px; width: 180px; height: 180px; background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%); border-radius: 50%; pointer-events: none;"></div>
+        <div style="width: 52px; height: 52px; border-radius: 12px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative;">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="white" style="width: 24px; height: 24px; stroke-width: 2;"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        </div>
+        <div style="position: relative;">
+          <h2 style="font-family: var(--font-logo); font-size: 1.4rem; margin-bottom: 6px;">Formulaire de demande spéciale</h2>
+          <p style="font-size: 0.9rem; opacity: 0.85;">Soyez le plus précis possible — ça nous aide à vous faire une proposition adaptée rapidement.</p>
+        </div>
+      </div>
+
+      <form id="special-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" style="padding: 44px 48px;">
+
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan-deep); margin-bottom: 18px; padding-bottom: 8px; border-bottom: 2px solid var(--cyan-light);">1. Vos coordonnées</div>
+          <div class="form-grid" style="--form-bg: rgba(0,0,0,0.04); --form-border: rgba(0,0,0,0.12); --form-color: var(--text-dark);">
+            <div class="form-group">
+              <label for="prenom" style="color: var(--gray);">Prénom *</label>
+              <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required style="background: var(--gray-light); border-color: rgba(0,0,0,0.1); color: var(--text-dark);" />
+            </div>
+            <div class="form-group">
+              <label for="nom" style="color: var(--gray);">Nom *</label>
+              <input type="text" id="nom" name="nom" placeholder="Votre nom" required style="background: var(--gray-light); border-color: rgba(0,0,0,0.1); color: var(--text-dark);" />
+            </div>
+            <div class="form-group">
+              <label for="email" style="color: var(--gray);">Email *</label>
+              <input type="email" id="email" name="email" placeholder="vous@exemple.com" required style="background: var(--gray-light); border-color: rgba(0,0,0,0.1); color: var(--text-dark);" />
+            </div>
+            <div class="form-group">
+              <label for="societe" style="color: var(--gray);">Entreprise (optionnel)</label>
+              <input type="text" id="societe" name="societe" placeholder="Nom de votre structure" style="background: var(--gray-light); border-color: rgba(0,0,0,0.1); color: var(--text-dark);" />
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan-deep); margin-bottom: 18px; padding-bottom: 8px; border-bottom: 2px solid var(--cyan-light);">2. Nature de votre besoin</div>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label for="nature" style="color: var(--gray);">Catégorie la plus proche</label>
+              <select id="nature" name="nature" style="background: var(--gray-light); border-color: rgba(0,0,0,0.1); color: var(--text-dark);">
+                <option value="">Choisir une catégorie</option>
+                <option value="document-autre">Document / mise en page (hors ReliDOC standard)</option>
+                <option value="recherche">Recherche documentaire / veille</option>
+                <option value="prospection-specifique">Prospection très spécifique</option>
+                <option value="analyse-marche">Analyse de marché / secteur</option>
+                <option value="traduction">Aide à la rédaction / traduction</option>
+                <option value="audit">Audit / diagnostic</option>
+                <option value="autre">Autre (je décris ci-dessous)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan-deep); margin-bottom: 18px; padding-bottom: 8px; border-bottom: 2px solid var(--cyan-light);">3. Description de votre projet</div>
+          <div class="form-group">
+            <label for="description" style="color: var(--gray);">Décrivez votre besoin en détail *</label>
+            <textarea id="description" name="description" rows="6" placeholder="Contexte de la mission, résultat attendu, contraintes de délai, informations pertinentes…" required style="background: var(--gray-light); border-color: rgba(0,0,0,0.1); color: var(--text-dark); min-height: 150px;"></textarea>
+          </div>
+          <div class="form-grid" style="margin-top: 16px;">
+            <div class="form-group">
+              <label for="budget" style="color: var(--gray);">Budget envisagé (optionnel)</label>
+              <select id="budget" name="budget" style="background: var(--gray-light); border-color: rgba(0,0,0,0.1); color: var(--text-dark);">
+                <option value="">Je ne sais pas encore</option>
+                <option value="moins-50">Moins de 50€</option>
+                <option value="50-150">50€ – 150€</option>
+                <option value="150-300">150€ – 300€</option>
+                <option value="300-500">300€ – 500€</option>
+                <option value="500+">Plus de 500€</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="delai" style="color: var(--gray);">Délai souhaité</label>
+              <select id="delai" name="delai" style="background: var(--gray-light); border-color: rgba(0,0,0,0.1); color: var(--text-dark);">
+                <option value="">Pas de contrainte particulière</option>
+                <option value="urgent">Urgent (moins d'une semaine)</option>
+                <option value="2-semaines">Sous 2 semaines</option>
+                <option value="1-mois">Sous 1 mois</option>
+                <option value="flexible">Flexible</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+          <div style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan-deep); margin-bottom: 18px; padding-bottom: 8px; border-bottom: 2px solid var(--cyan-light);">4. Préférence de contact</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="contact-pref" style="color: var(--gray);">Comment souhaitez-vous être contacté ?</label>
+              <select id="contact-pref" name="contact-pref" style="background: var(--gray-light); border-color: rgba(0,0,0,0.1); color: var(--text-dark);">
+                <option value="email">Par email</option>
+                <option value="appel">Par téléphone</option>
+                <option value="visio">En visio (Zoom / Meet)</option>
+                <option value="indifferent">Peu importe</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="telephone" style="color: var(--gray);">Téléphone (si appel souhaité)</label>
+              <input type="tel" id="telephone" name="telephone" placeholder="06 XX XX XX XX" style="background: var(--gray-light); border-color: rgba(0,0,0,0.1); color: var(--text-dark);" />
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap; padding-top: 8px; border-top: 1px solid var(--cyan-light);">
+          <button type="submit" class="btn btn-primary" style="font-size:1rem; padding:14px 32px;">
+            Envoyer ma demande spéciale →
+          </button>
+          <span style="font-size:0.82rem; color:var(--gray);">Réponse garantie sous 48h · Sans engagement</span>
+        </div>
+        <div class="form-success" id="form-success" style="color: var(--cyan-deep); background: var(--cyan-light); border-color: var(--cyan);">
+          Merci pour votre demande ! Nous l'étudions et revenons vers vous sous 48h.
+        </div>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer__logo"><span class="reli">Reli</span><span class="task">TASK</span></div>
+  <div class="footer__info">SIRET : 372865328762928763 · <a href="mailto:relitask@etik.com">relitask@etik.com</a></div>
+  <div class="footer__legal">
+    <a href="mentions-legales.html">Mentions légales</a>
+    <a href="mentions-legales.html#cgv">CGV</a>
+  </div>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver((e) => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  const form = document.getElementById('special-form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      const action = form.getAttribute('action');
+      if (action && action.includes('YOUR_FORM_ID')) {
+        e.preventDefault();
+        alert('Formulaire non configuré. Remplacez YOUR_FORM_ID par votre identifiant Formspree.');
+        return;
+      }
+      e.preventDefault();
+      fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
+        .then(r => { if (r.ok) { form.reset(); document.getElementById('form-success').style.display = 'block'; } });
+    });
+  }
+</script>
+</body>
+</html>

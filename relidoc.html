@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReliDOC — Refonte de documents | ReliTASK</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Paytone+One&family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    .page-hero { padding-bottom: 40px; }
+    #probleme-section { padding-top: 16px; padding-bottom: 0; }
+    #avant-apres-section { padding-top: 0; }
+
+    .problem-box {
+      border-left: none;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 0;
+      margin-bottom: 56px;
+      transition: transform 0.24s ease, box-shadow 0.24s ease;
+    }
+    .problem-box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(239,101,101,0.16);
+    }
+    .problem-box::before {
+      content: '';
+      position: absolute;
+      top: -55px; right: -55px;
+      width: 170px; height: 170px;
+      background: radial-gradient(circle, rgba(239,101,101,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .problem-box__icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: var(--coral);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .problem-box__icon svg { width: 24px; height: 24px; color: var(--white); }
+    .problem-box__content { position: relative; }
+    .problem-box__content p { text-align: justify; }
+    @media (max-width: 540px) {
+      .problem-box { gap: 14px; }
+    }
+
+    /* ===== DOC PREVIEW CARDS ===== */
+    .doc-preview-carousel { position: relative; }
+    .doc-preview-grid {
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      --jp-primary: #6d28d9;
+      --jp-accent: #f59e0b;
+      --jp-light: #f4eefc;
+      --jp-highlight-bg: #fef3e2;
+      --proc2-primary: #be123c;
+      --proc2-accent: #f97316;
+      --proc2-light: #fdeef1;
+      --proc2-highlight-bg: #fdf2e9;
+      --btp-primary: #166534;
+      --btp-accent: #facc15;
+      --btp-light: #ecfdf5;
+      --btp-highlight-bg: #fef9c3;
+      --btp-alert: #b45309;
+    }
+    .doc-preview-grid::-webkit-scrollbar { display: none; }
+    .doc-preview-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-hover);
+      border: 1.5px solid rgba(112,212,219,0.25);
+      background: var(--white);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.24s ease, box-shadow 0.24s ease;
+      flex: 1 1 0;
+      min-width: 250px;
+      scroll-snap-align: start;
+    }
+    .doc-preview-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 30px rgba(13,122,130,0.18);
+    }
+    .doc-preview-card__label {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.78rem; font-weight: 700;
+      color: var(--cyan-deep);
+      background: var(--cyan-light);
+      padding: 10px 16px;
+      border-bottom: 1.5px solid rgba(112,212,219,0.25);
+    }
+    .doc-preview-card__label svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .doc-preview-card__body { padding: 16px; flex: 1; }
+    .doc-preview-card__body--doc {
+      padding: 0;
+      overflow: hidden;
+      aspect-ratio: 210 / 297;
+      position: relative;
+      background: var(--white);
+    }
+    .jp-doc, .proc2-doc, .btp-doc {
+      position: absolute;
+      top: 0; left: 0;
+      width: 200%;
+      padding: 28px 26px;
+      box-sizing: border-box;
+      transform: scale(0.5);
+      transform-origin: top left;
+    }
+    .doc-preview-card--jp .doc-preview-card__label { color: var(--jp-primary); background: var(--jp-light); }
+    .doc-preview-card--proc2 .doc-preview-card__label { color: var(--proc2-primary); background: var(--proc2-light); }
+    .doc-preview-card--btp .doc-preview-card__label { color: var(--btp-primary); background: var(--btp-light); }
+
+    /* Fiche de poste */
+    .jp-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .jp-logo { font-family: 'Paytone One', sans-serif; font-size: 22px; color: var(--jp-primary); }
+    .jp-logo span { color: var(--jp-accent); }
+    .jp-ref { font-size: 13px; color: var(--gray); text-align: right; }
+    .jp-title { font-family: 'Paytone One', sans-serif; font-size: 24px; color: var(--jp-primary); line-height: 1.2; margin-bottom: 4px; }
+    .jp-title span { color: var(--jp-accent); }
+    .jp-subtitle { font-size: 14px; color: var(--gray); margin-bottom: 8px; }
+    .jp-infogrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .jp-info { background: var(--jp-light); border-radius: 8px; padding: 8px 12px; }
+    .jp-info span { font-size: 12px; text-transform: uppercase; color: var(--jp-primary); display: block; margin-bottom: 3px; letter-spacing: 0.06em; font-weight: 700; }
+    .jp-info strong { font-size: 15px; color: var(--text-dark); }
+    .jp-block { margin-bottom: 8px; }
+    .jp-block__title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em; color: var(--jp-primary); border-bottom: 3px solid var(--jp-accent); padding-bottom: 3px; margin-bottom: 5px; }
+    .jp-block ul { list-style: none; }
+    .jp-block li { font-size: 13px; padding: 1px 0 1px 22px; position: relative; color: var(--text-dark); }
+    .jp-block li::before { content: '✓'; position: absolute; left: 0; color: var(--jp-primary); font-weight: 900; font-size: 13px; }
+    .jp-block--highlight { background: var(--jp-highlight-bg); border-left: 5px solid var(--jp-accent); border-radius: 0 10px 10px 0; padding: 8px 12px; }
+    .jp-block--highlight .jp-block__title { color: var(--jp-accent); border-bottom-color: var(--jp-accent); }
+    .jp-block--highlight li::before { color: var(--jp-accent); }
+    .jp-intro { font-size: 14px; color: var(--gray); line-height: 1.4; margin-bottom: 8px; }
+    .jp-footer { margin-top: 4px; padding-top: 8px; border-top: 2px dashed rgba(0,0,0,0.12); font-size: 12px; color: var(--gray); line-height: 1.35; }
+    .jp-footer strong { color: var(--jp-primary); }
+
+    /* Procédure de fermeture */
+    .proc2-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid var(--proc2-accent); padding-bottom: 10px; margin-bottom: 12px; }
+    .proc2-logo { font-family: 'Paytone One', sans-serif; font-size: 20px; color: var(--proc2-primary); }
+    .proc2-logo small { display: block; font-size: 12px; color: var(--gray); font-weight: 400; font-family: 'DM Sans', sans-serif; margin-top: 2px; }
+    .proc2-docinfo { text-align: right; font-size: 12px; color: var(--gray); }
+    .proc2-docinfo strong { color: var(--proc2-accent); font-size: 14px; display: block; }
+    .proc2-title { font-family: 'Paytone One', sans-serif; font-size: 22px; color: var(--proc2-primary); margin-bottom: 6px; }
+    .proc2-title span { color: var(--proc2-accent); }
+    .proc2-subtitle { font-size: 13px; color: var(--gray); margin-bottom: 10px; }
+    .proc2-steps { display: flex; flex-direction: column; gap: 6px; }
+    .proc2-step { display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: flex-start; }
+    .proc2-num { width: 30px; height: 30px; border-radius: 50%; background: var(--proc2-primary); color: white; display: flex; align-items: center; justify-content: center; font-family: 'Paytone One', sans-serif; font-size: 13px; flex-shrink: 0; }
+    .proc2-num.coral { background: var(--proc2-accent); }
+    .proc2-step-content { border: 1.5px solid rgba(0,0,0,0.08); border-radius: 8px; padding: 8px 10px; }
+    .proc2-step-content h4 { font-size: 13px; font-weight: 800; color: var(--proc2-primary); margin-bottom: 2px; }
+    .proc2-step-content p { font-size: 11px; color: var(--gray); line-height: 1.3; }
+    .proc2-meta { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .proc2-meta-card { background: var(--proc2-light); border-radius: 8px; padding: 8px 10px; }
+    .proc2-meta-card span { font-size: 11px; text-transform: uppercase; color: var(--proc2-primary); display: block; margin-bottom: 2px; letter-spacing: 0.06em; font-weight: 700; }
+    .proc2-meta-card strong { font-size: 13px; color: var(--text-dark); }
+    .proc2-footer { margin-top: 8px; padding-top: 8px; border-top: 2px dashed rgba(0,0,0,0.12); font-size: 11px; color: var(--gray); line-height: 1.45; }
+    .proc2-footer strong { color: var(--proc2-accent); }
+
+    /* Avant / Après (images) */
+    .doc-preview-card__body--ba { padding: 0; }
+    .ba-toggle {
+      position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 5;
+      display: flex; gap: 4px;
+      background: rgba(255,255,255,0.92);
+      border-radius: 999px;
+      padding: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+    .ba-btn {
+      border: none; background: transparent; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 700;
+      padding: 5px 14px; border-radius: 999px; color: var(--gray);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .ba-btn.active { background: var(--coral); color: var(--white); }
+    .ba-images { position: absolute; inset: 0; }
+    .ba-img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: top;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .ba-img.active { opacity: 1; }
+
+    /* Procédure d'ouverture BTP — mise en page "document officiel" */
+    .btp-doc { font-family: Georgia, 'Times New Roman', serif; color: var(--text-dark); }
+    .btp-stripe {
+      height: 8px;
+      margin: -28px -26px 10px -26px;
+      background: repeating-linear-gradient(135deg, var(--btp-primary) 0 12px, var(--btp-accent) 12px 24px);
+    }
+    .btp-letterhead { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; border-bottom: 2px solid var(--btp-primary); padding-bottom: 6px; margin-bottom: 8px; }
+    .btp-company { font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: 0.04em; color: var(--btp-primary); text-transform: uppercase; }
+    .btp-company small { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 8.5px; font-weight: 400; letter-spacing: 0; color: var(--gray); text-transform: none; margin-top: 3px; }
+    .btp-refbox { font-family: 'IBM Plex Mono', monospace; font-size: 9px; line-height: 1.55; color: var(--text-dark); text-align: right; border: 1px solid var(--text-dark); padding: 4px 8px; flex-shrink: 0; }
+    .btp-refbox strong { display: block; font-size: 10px; }
+    .btp-title { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-dark); margin-bottom: 3px; line-height: 1.15; }
+    .btp-title span { color: var(--btp-primary); }
+    .btp-subtitle { font-family: 'IBM Plex Mono', monospace; font-size: 8.5px; color: var(--gray); margin-bottom: 8px; line-height: 1.5; }
+    .btp-fields { display: grid; grid-template-columns: 1fr 1fr 1fr; border: 1px solid var(--text-dark); margin-bottom: 8px; }
+    .btp-field { border-right: 1px solid var(--text-dark); padding: 3px 6px; }
+    .btp-field:last-child { border-right: none; }
+    .btp-field span { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 8px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--gray); margin-bottom: 2px; }
+    .btp-field strong { font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 600; }
+    .btp-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+    .btp-section { margin-bottom: 7px; }
+    .btp-section__title { font-family: 'Oswald', sans-serif; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--white); background: var(--btp-primary); padding: 3px 6px; }
+    .btp-section--alert .btp-section__title { background: var(--btp-alert); }
+    .btp-table { width: 100%; border-collapse: collapse; font-size: 9.5px; }
+    .btp-table th, .btp-table td { border: 1px solid #cbd5d1; padding: 1.5px 5px; text-align: left; }
+    .btp-table th { font-family: 'IBM Plex Mono', monospace; font-size: 7.5px; text-transform: uppercase; background: var(--btp-light); color: var(--btp-primary); font-weight: 600; }
+    .btp-table td.btp-check { text-align: center; width: 20px; font-family: 'IBM Plex Mono', monospace; }
+    .btp-section--alert .btp-table th { background: var(--btp-highlight-bg); color: var(--btp-alert); }
+    .btp-signoff { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--text-dark); }
+    .btp-signbox span { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 8px; text-transform: uppercase; color: var(--gray); margin-bottom: 12px; }
+    .btp-signbox .btp-line { border-bottom: 1px solid var(--text-dark); }
+    .btp-stamp {
+      width: 58px; height: 58px; border-radius: 50%; border: 2px solid var(--btp-primary);
+      display: flex; align-items: center; justify-content: center; text-align: center;
+      font-family: 'Oswald', sans-serif; font-size: 8px; font-weight: 700; text-transform: uppercase;
+      color: var(--btp-primary); transform: rotate(-12deg); line-height: 1.25;
+    }
+
+    /* Carrousel des aperçus */
+    .dp-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 40px; height: 40px; border-radius: 50%; border: none;
+      background: var(--white); box-shadow: var(--shadow-hover);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 900; line-height: 1; color: var(--cyan-deep); cursor: pointer;
+      z-index: 6; transition: opacity 0.2s ease;
+    }
+    .dp-arrow--prev { left: -16px; }
+    .dp-arrow--next { right: -16px; }
+    .dp-arrow:disabled { opacity: 0; pointer-events: none; }
+    .doc-preview-carousel:not(.has-overflow) .dp-arrow { display: none; }
+
+    @media (max-width: 980px) {
+      .doc-preview-card { min-width: 82vw; }
+      .dp-arrow--prev { left: 4px; }
+      .dp-arrow--next { right: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="index.html" class="logo"><span class="reli">Reli</span><span class="task">TASK</span></a>
+    <ul class="nav-links">
+      <li><a href="relidoc.html" class="active">ReliDOC</a></li>
+      <li><a href="relicontact.html">ReliCONTACT</a></li>
+      <li><a href="relitest.html">ReliTEST</a></li>
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="devis-special.html" class="nav-special">Demande spéciale</a></li>
+      <li><a href="#contact" class="nav-cta">Obtenir un devis</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="page-hero__eyebrow">
+      <a href="index.html" class="page-hero__back">← Retour à l'accueil</a>
+      <span class="page-hero__tag">ReliDOC</span>
+    </div>
+    <h1 class="page-hero__title">Vos documents travaillent <span class="accent-coral">pour vous</span> ou contre vous.</h1>
+    <p class="page-hero__desc">Une fiche de poste illisible, une procédure que personne ne suit, une présentation qui ne convainc pas — ce sont des opportunités manquées. ReliDOC transforme vos documents en outils qui font vraiment leur travail.</p>
+  </div>
+</section>
+
+<section class="section" id="probleme-section">
+  <div class="container">
+    <div class="problem-box reveal">
+      <div class="problem-box__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="stroke-width: 2;"><circle cx="12" cy="12" r="9" stroke-linecap="round" stroke-linejoin="round"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7v5l3 3"/></svg>
+      </div>
+      <div class="problem-box__content">
+        <div class="problem-box__label">Le problème</div>
+        <p>La plupart des documents professionnels sont rédigés à la va-vite, sans hiérarchie visuelle, sans cohérence graphique. Résultat : personne ne les lit vraiment. Vos recrutements en pâtissent, vos process ne sont pas respectés, vos partenaires ne comprennent pas votre offre.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="avant-apres-section">
+  <div class="container">
+    <span class="badge reveal">Avant / Après</span>
+    <h2 class="section-title reveal">Voyez la différence par vous-même</h2>
+    <p class="section-sub reveal">Quelques exemples de documents repensés avec la charte graphique ReliTASK.</p>
+  </div>
+</section>
+
+<section class="comparison-section">
+  <div class="container">
+    <div class="doc-preview-carousel">
+      <button type="button" class="dp-arrow dp-arrow--prev" aria-label="Aperçu précédent">‹</button>
+      <button type="button" class="dp-arrow dp-arrow--next" aria-label="Aperçu suivant">›</button>
+      <div class="doc-preview-grid">
+      <div class="doc-preview-card doc-preview-card--jp reveal">
+        <div class="doc-preview-card__label">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          Fiche de poste
+        </div>
+        <div class="doc-preview-card__body doc-preview-card__body--doc">
+          <div class="jp-doc">
+          <div class="jp-header">
+            <div class="jp-logo">Reli<span>TASK</span></div>
+            <div class="jp-ref">Réf. LOG-2025-031<br>CDI · Temps plein</div>
+          </div>
+          <div class="jp-title">Préparateur(trice) <span>de commandes</span></div>
+          <div class="jp-subtitle">Entrepôt logistique · Service Expéditions · Prise de poste dès que possible</div>
+          <div class="jp-intro">Notre entrepôt de 4 500 m² traite plus de 800 commandes par jour. Dans le cadre de notre développement, nous recherchons un(e) préparateur(trice) de commandes pour renforcer l'équipe expéditions.</div>
+          <div class="jp-infogrid">
+            <div class="jp-info"><span>Lieu</span><strong>Saint-Priest (69)</strong></div>
+            <div class="jp-info"><span>Horaires</span><strong>35h · 6h–13h30</strong></div>
+            <div class="jp-info"><span>Rémunération</span><strong>1 850 € brut/mois</strong></div>
+            <div class="jp-info"><span>Contrat</span><strong>CDI</strong></div>
+            <div class="jp-info"><span>Expérience</span><strong>Débutant accepté</strong></div>
+            <div class="jp-info"><span>Démarrage</span><strong>Dès que possible</strong></div>
+          </div>
+          <div class="jp-block">
+            <div class="jp-block__title">Vos missions</div>
+            <ul>
+              <li>Préparer les commandes selon les bons de picking, dans le respect des délais</li>
+              <li>Charger et décharger les camions, vérifier la conformité des livraisons</li>
+              <li>Utiliser le système de gestion d'entrepôt (scanner, terminal embarqué)</li>
+              <li>Ranger, étiqueter et approvisionner les zones de stockage</li>
+              <li>Contrôler la qualité et l'état des produits avant expédition</li>
+            </ul>
+          </div>
+          <div class="jp-block">
+            <div class="jp-block__title">Profil recherché</div>
+            <ul>
+              <li>CACES 1-3 apprécié, débutants motivés acceptés</li>
+              <li>Rigueur, ponctualité et sens de l'organisation</li>
+              <li>Capacité à travailler en équipe et à respecter les cadences</li>
+              <li>À l'aise avec les outils numériques (scanner, terminal)</li>
+            </ul>
+          </div>
+          <div class="jp-block jp-block--highlight">
+            <div class="jp-block__title">Avantages</div>
+            <ul>
+              <li>Prime de productivité mensuelle · Panier repas</li>
+              <li>Mutuelle d'entreprise · CSE · 13e mois</li>
+              <li>Formation interne et perspectives d'évolution</li>
+            </ul>
+          </div>
+          <div class="jp-footer">Candidature à adresser à <strong>recrutement@entreprise.fr</strong> — entretien sous 10 jours.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-preview-card doc-preview-card--proc2 reveal">
+        <div class="doc-preview-card__label">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Procédure
+        </div>
+        <div class="doc-preview-card__body doc-preview-card__body--doc">
+          <div class="proc2-doc">
+          <div class="proc2-header">
+            <div class="proc2-logo">BioVert<small>Fruits & légumes bio</small></div>
+            <div class="proc2-docinfo"><strong>PROC-MAG-007</strong>Version 1.0 · Mise à jour : janv. 2025</div>
+          </div>
+          <div class="proc2-title">Procédure de <span>fermeture du magasin</span></div>
+          <div class="proc2-subtitle">Rayon fruits & légumes · À effectuer chaque soir avant fermeture</div>
+          <div class="proc2-meta">
+            <div class="proc2-meta-card"><span>Responsable</span><strong>Resp. de rayon</strong></div>
+            <div class="proc2-meta-card"><span>Fréquence</span><strong>Tous les soirs</strong></div>
+            <div class="proc2-meta-card"><span>Durée estimée</span><strong>20-25 min</strong></div>
+          </div>
+          <div class="proc2-steps">
+            <div class="proc2-step">
+              <div class="proc2-num">1</div>
+              <div class="proc2-step-content">
+                <h4>Tri et retrait des invendus</h4>
+                <p>Retirer les fruits et légumes abîmés ou arrivés à date, peser la démarque et la consigner.</p>
+              </div>
+            </div>
+            <div class="proc2-step">
+              <div class="proc2-num">2</div>
+              <div class="proc2-step-content">
+                <h4>Nettoyage des étals et bacs</h4>
+                <p>Vider, essuyer et désinfecter les bacs d'exposition, balayer la zone fruits & légumes.</p>
+              </div>
+            </div>
+            <div class="proc2-step">
+              <div class="proc2-num">3</div>
+              <div class="proc2-step-content">
+                <h4>Contrôle de la chambre froide</h4>
+                <p>Vérifier et noter la température (4°C à 8°C), ranger les produits sensibles.</p>
+              </div>
+            </div>
+            <div class="proc2-step">
+              <div class="proc2-num">4</div>
+              <div class="proc2-step-content">
+                <h4>Vérification des stocks</h4>
+                <p>Contrôler les niveaux de stock en réserve et anticiper les besoins du lendemain.</p>
+              </div>
+            </div>
+            <div class="proc2-step">
+              <div class="proc2-num">5</div>
+              <div class="proc2-step-content">
+                <h4>Réassort des rayons</h4>
+                <p>Préparer et disposer le réassort pour l'ouverture du lendemain.</p>
+              </div>
+            </div>
+            <div class="proc2-step">
+              <div class="proc2-num">6</div>
+              <div class="proc2-step-content">
+                <h4>Étiquetage et affichage</h4>
+                <p>Vérifier la conformité des étiquettes prix et de l'affichage promotionnel.</p>
+              </div>
+            </div>
+            <div class="proc2-step">
+              <div class="proc2-num">7</div>
+              <div class="proc2-step-content">
+                <h4>Nettoyage de la caisse et du comptoir</h4>
+                <p>Désinfecter le comptoir, ranger les sacs et fournitures d'emballage.</p>
+              </div>
+            </div>
+            <div class="proc2-step">
+              <div class="proc2-num">8</div>
+              <div class="proc2-step-content">
+                <h4>Comptage et sécurisation de la caisse</h4>
+                <p>Compter la caisse, éditer le ticket de clôture et ranger le fonds de caisse.</p>
+              </div>
+            </div>
+            <div class="proc2-step">
+              <div class="proc2-num">9</div>
+              <div class="proc2-step-content">
+                <h4>Vérification des accès</h4>
+                <p>Contrôler les portes, fenêtres et issues de secours du magasin.</p>
+              </div>
+            </div>
+            <div class="proc2-step">
+              <div class="proc2-num coral">10</div>
+              <div class="proc2-step-content">
+                <h4>Activation de l'alarme et fermeture</h4>
+                <p>Éteindre les lumières et équipements, activer l'alarme, baisser le rideau.</p>
+              </div>
+            </div>
+          </div>
+          <div class="proc2-footer">À cocher et signer par l'employé(e) en charge de la fermeture · <strong>Signature : ____________</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-preview-card reveal">
+        <div class="doc-preview-card__label">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10H5a2 2 0 01-2-2V9a2 2 0 012-2h4m0 10h6m0 0h4a2 2 0 002-2V9a2 2 0 00-2-2h-4m0 10V7"/></svg>
+          Fiche technique produit
+        </div>
+        <div class="doc-preview-card__body doc-preview-card__body--doc doc-preview-card__body--ba">
+          <div class="ba-toggle">
+            <button type="button" class="ba-btn active" data-target="avant">Avant</button>
+            <button type="button" class="ba-btn" data-target="apres">Après ReliDOC</button>
+          </div>
+          <div class="ba-images">
+            <img src="images/avant.png" alt="Avant — fiche technique d'origine" class="ba-img active" data-state="avant">
+            <img src="images/apres.png" alt="Après ReliDOC — fiche technique redesignée" class="ba-img" data-state="apres">
+          </div>
+        </div>
+      </div>
+
+      <div class="doc-preview-card doc-preview-card--btp reveal">
+        <div class="doc-preview-card__label">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.008"/></svg>
+          Procédure d'ouverture (BTP)
+        </div>
+        <div class="doc-preview-card__body doc-preview-card__body--doc">
+          <div class="btp-doc">
+            <div class="btp-stripe"></div>
+            <div class="btp-letterhead">
+              <div class="btp-company">BâtiSécure
+                <small>BTP — Gros œuvre & VRD · 14 rue des Artisans, 69800 Saint-Priest · SIRET 812 345 678 00021</small>
+              </div>
+              <div class="btp-refbox">
+                <strong>DOC. PROC-SEC-014</strong>
+                Rév. 03 — 06/2026<br>
+                Chantier : Lot 7, Rés. Les Tilleuls<br>
+                Page 1/1
+              </div>
+            </div>
+            <div class="btp-title">Procédure d'ouverture <span>de chantier</span></div>
+            <div class="btp-subtitle">Contrôles de sécurité obligatoires avant tout démarrage d'activité — réf. Code du travail art. R4534-1 et s., PGC applicable au site.</div>
+            <div class="btp-fields">
+              <div class="btp-field"><span>Responsable</span><strong>Chef de chantier</strong></div>
+              <div class="btp-field"><span>Fréquence</span><strong>Chaque jour ouvré</strong></div>
+              <div class="btp-field"><span>Durée moyenne</span><strong>20 — 25 min</strong></div>
+            </div>
+            <div class="btp-cols">
+              <div>
+                <div class="btp-section">
+                  <div class="btp-section__title">1. Équipements de protection individuelle</div>
+                  <table class="btp-table">
+                    <tr><th>Point de contrôle</th><th class="btp-check">OK</th><th class="btp-check">NOK</th></tr>
+                    <tr><td>Casque de chantier porté</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                    <tr><td>Gilet haute visibilité</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                    <tr><td>Chaussures de sécurité S3</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                    <tr><td>Gants de protection adaptés</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                    <tr><td>Lunettes / protection auditive</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                  </table>
+                </div>
+                <div class="btp-section">
+                  <div class="btp-section__title">2. Signalisation &amp; balisage</div>
+                  <table class="btp-table">
+                    <tr><th>Point de contrôle</th><th class="btp-check">OK</th><th class="btp-check">NOK</th></tr>
+                    <tr><td>Panneaux d'accès en place</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                    <tr><td>Périmètre balisé / clôturé</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                    <tr><td>Zones piétons / engins séparées</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                    <tr><td>Affichage du règlement intérieur</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                  </table>
+                </div>
+              </div>
+              <div>
+                <div class="btp-section">
+                  <div class="btp-section__title">3. Engins &amp; installations</div>
+                  <table class="btp-table">
+                    <tr><th>Point de contrôle</th><th class="btp-check">OK</th><th class="btp-check">NOK</th></tr>
+                    <tr><td>Contrôle visuel des engins</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                    <tr><td>Élingues et dispositifs de levage</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                    <tr><td>Garde-corps / échafaudages</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                    <tr><td>Réseaux électriques de chantier</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                  </table>
+                </div>
+                <div class="btp-section btp-section--alert">
+                  <div class="btp-section__title">4. Secours &amp; urgences</div>
+                  <table class="btp-table">
+                    <tr><th>Point de contrôle</th><th class="btp-check">OK</th><th class="btp-check">NOK</th></tr>
+                    <tr><td>Trousse de secours accessible</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                    <tr><td>Numéros d'urgence affichés</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                    <tr><td>Point de rassemblement signalé</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                    <tr><td>Sauveteur SST présent</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                  </table>
+                </div>
+                <div class="btp-section">
+                  <div class="btp-section__title">5. Permis &amp; autorisations</div>
+                  <table class="btp-table">
+                    <tr><th>Point de contrôle</th><th class="btp-check">OK</th><th class="btp-check">NOK</th></tr>
+                    <tr><td>Permis de feu (travaux à chaud)</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                    <tr><td>Autorisations conduite engins</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                    <tr><td>Plan de prévention signé</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="btp-signoff">
+              <div class="btp-signbox"><span>Chef de chantier — nom &amp; date</span><div class="btp-line">&nbsp;</div></div>
+              <div class="btp-signbox"><span>Coordinateur SPS — nom &amp; date</span><div class="btp-line">&nbsp;</div></div>
+              <div class="btp-stamp">Visa<br>Sécurité<br>Conforme</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing-section section--alt">
+  <div class="container">
+    <span class="badge reveal">Tarifs — Documents longs</span>
+    <h2 class="section-title reveal">Refonte de documents (rapports, guides, procédures)</h2>
+    <p class="section-sub reveal">Tarif au volume pour les documents de plusieurs pages.</p>
+    <div class="pricing-grid reveal">
+      <div class="pricing-card">
+        <div class="pricing-card__label">STARTER</div>
+        <div class="pricing-card__volume">1 – 10 pages</div>
+        <div class="pricing-card__price">25€</div>
+        <div class="pricing-card__unit">/ page</div>
+        <div class="pricing-card__option">+ 5 € / page avec traduction</div>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-card__label">ESSENTIEL</div>
+        <div class="pricing-card__volume">11 – 30 pages</div>
+        <div class="pricing-card__price">20€</div>
+        <div class="pricing-card__unit">/ page</div>
+        <div class="pricing-card__option">+ 5 € / page avec traduction</div>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-card__label">PROFESSIONNEL</div>
+        <div class="pricing-card__volume">31 – 50 pages</div>
+        <div class="pricing-card__price">15€</div>
+        <div class="pricing-card__unit">/ page</div>
+        <div class="pricing-card__option">+ 5 € / page avec traduction</div>
+        <div class="pricing-card__savings">Le plus choisi</div>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-card__label">SUR MESURE</div>
+        <div class="pricing-card__volume">50+ pages ou demande spéciale</div>
+        <div class="pricing-card__price">Sur devis</div>
+        <div class="pricing-card__unit">&nbsp;</div>
+        <div class="pricing-card__option">Devis sous 48h · gratuit et sans engagement</div>
+      </div>
+    </div>
+    <div class="pricing-note reveal">Devis gratuit et sans engagement · Livraison en 3 à 5 jours ouvrés</div>
+
+    <span class="badge reveal" style="margin-top: 56px; display:inline-block;">Tarifs — Fiches courtes</span>
+    <h2 class="section-title reveal">Fiches de poste, fiches techniques, fiches produit</h2>
+    <div class="pricing-grid reveal">
+      <div class="pricing-card">
+        <div class="pricing-card__label">UNITAIRE</div>
+        <div class="pricing-card__volume">1 fiche</div>
+        <div class="pricing-card__price">35€</div>
+        <div class="pricing-card__unit">/ fiche</div>
+        <div class="pricing-card__option">1 révision</div>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-card__label">DUO</div>
+        <div class="pricing-card__volume">2 fiches</div>
+        <div class="pricing-card__price">65€</div>
+        <div class="pricing-card__unit">/ lot</div>
+        <div class="pricing-card__option">1 révision</div>
+        <div class="pricing-card__savings">−7%</div>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-card__label">PACK</div>
+        <div class="pricing-card__volume">3 fiches</div>
+        <div class="pricing-card__price">90€</div>
+        <div class="pricing-card__unit">/ lot</div>
+        <div class="pricing-card__option">2 révisions</div>
+        <div class="pricing-card__savings">Le plus populaire</div>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-card__label">VOLUME</div>
+        <div class="pricing-card__volume">5 fiches +</div>
+        <div class="pricing-card__price">Sur devis</div>
+        <div class="pricing-card__unit">&nbsp;</div>
+        <div class="pricing-card__option">Tarif préférentiel</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <span class="badge reveal">Ce qui est inclus</span>
+    <h2 class="section-title reveal">Ce que vous recevez — et ce qui n'est pas inclus</h2>
+    <div class="includes-grid reveal">
+      <div class="includes-box includes-box--yes">
+        <div class="includes-box__title">
+          <span class="check">✓</span> Inclus dans chaque mission
+        </div>
+        <ul>
+          <li><span class="check">✓</span> Restructuration complète du contenu et de la hiérarchie</li>
+          <li><span class="check">✓</span> Mise en page professionnelle (couleurs, typographie, espacements)</li>
+          <li><span class="check">✓</span> Intégration de votre logo et de votre charte graphique</li>
+          <li><span class="check">✓</span> Livraison en PDF haute résolution + fichier source</li>
+          <li><span class="check">✓</span> 1 à 2 révisions selon le forfait</li>
+          <li><span class="check">✓</span> Délai de livraison garanti par écrit</li>
+        </ul>
+      </div>
+      <div class="includes-box includes-box--no">
+        <div class="includes-box__title">
+          <span class="cross">✕</span> Non inclus
+        </div>
+        <ul>
+          <li><span class="cross">✕</span> Rédaction du contenu (vous fournissez le texte)</li>
+          <li><span class="cross">✕</span> Création de charte graphique (si vous n'en avez pas, option disponible)</li>
+          <li><span class="cross">✕</span> Traduction du document</li>
+          <li><span class="cross">✕</span> Impression ou envoi physique</li>
+          <li><span class="cross">✕</span> Révisions au-delà du nombre inclus dans le forfait</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact-section" id="contact">
+  <div class="container">
+    <span class="badge reveal">Demander un devis ReliDOC</span>
+    <h2 class="section-title reveal">Envoyez-nous votre document</h2>
+    <p class="section-sub reveal">Décrivez votre besoin, joignez votre document existant si vous en avez un. Devis gratuit sous 48h.</p>
+    <form id="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required />
+        </div>
+        <div class="form-group">
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" name="nom" placeholder="Votre nom" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="vous@exemple.com" required />
+        </div>
+        <div class="form-group">
+          <label for="type-doc">Type de document</label>
+          <select id="type-doc" name="type-doc">
+            <option value="">Choisir</option>
+            <option value="fiche-poste">Fiche de poste</option>
+            <option value="procedure">Procédure interne</option>
+            <option value="fiche-technique">Fiche technique / produit</option>
+            <option value="rapport">Rapport / guide</option>
+            <option value="presentation">Présentation</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label for="message">Décrivez votre besoin</label>
+          <textarea id="message" name="message" placeholder="Nombre de pages approximatif, contexte d'utilisation, charte graphique existante ?…"></textarea>
+        </div>
+      </div>
+      <div class="form-submit">
+        <button type="submit" class="btn btn-white">Envoyer ma demande →</button>
+      </div>
+      <div class="form-success" id="form-success">Merci ! Votre message a bien été envoyé. Nous vous répondrons sous 48h.</div>
+    </form>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer__logo"><span class="reli">Reli</span><span class="task">TASK</span></div>
+  <div class="footer__info">SIRET : 372865328762928763 · <a href="mailto:relitask@etik.com">relitask@etik.com</a></div>
+  <div class="footer__legal">
+    <a href="mentions-legales.html">Mentions légales</a>
+    <a href="mentions-legales.html#cgv">CGV</a>
+  </div>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver((e) => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  document.querySelectorAll('.ba-toggle').forEach(toggle => {
+    const card = toggle.closest('.doc-preview-card__body--ba');
+    toggle.querySelectorAll('.ba-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.target;
+        toggle.querySelectorAll('.ba-btn').forEach(b => b.classList.toggle('active', b === btn));
+        card.querySelectorAll('.ba-img').forEach(img => img.classList.toggle('active', img.dataset.state === target));
+      });
+    });
+  });
+
+  document.querySelectorAll('.doc-preview-carousel').forEach(carousel => {
+    const grid = carousel.querySelector('.doc-preview-grid');
+    const prev = carousel.querySelector('.dp-arrow--prev');
+    const next = carousel.querySelector('.dp-arrow--next');
+    function update() {
+      const hasOverflow = grid.scrollWidth > grid.clientWidth + 2;
+      carousel.classList.toggle('has-overflow', hasOverflow);
+      prev.disabled = grid.scrollLeft <= 2;
+      next.disabled = grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 2;
+    }
+    function step() {
+      const card = grid.querySelector('.doc-preview-card');
+      const gap = parseFloat(getComputedStyle(grid).gap) || 0;
+      return (card ? card.getBoundingClientRect().width : 0) + gap;
+    }
+    prev.addEventListener('click', () => grid.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next.addEventListener('click', () => grid.scrollBy({ left: step(), behavior: 'smooth' }));
+    grid.addEventListener('scroll', update);
+    window.addEventListener('resize', update);
+    update();
+  });
+
+  const form = document.getElementById('contact-form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      const action = form.getAttribute('action');
+      if (action && action.includes('YOUR_FORM_ID')) {
+        e.preventDefault();
+        alert('Formulaire non configuré. Remplacez YOUR_FORM_ID par votre identifiant Formspree.');
+        return;
+      }
+      e.preventDefault();
+      fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
+        .then(r => { if (r.ok) { form.reset(); document.getElementById('form-success').style.display = 'block'; } });
+    });
+  }
+</script>
+</body>
+</html>

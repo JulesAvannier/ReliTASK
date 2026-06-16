@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReliTEST — Client mystère & veille concurrentielle | ReliTASK</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Paytone+One&display=swap" rel="stylesheet" />
+  <style>
+    .page-hero__desc { text-align: justify; }
+    .page-hero { padding-bottom: 40px; }
+    #probleme-section { padding-top: 16px; }
+
+    .problem-box {
+      border-left: none;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+      margin-top: 0;
+      margin-bottom: 56px;
+      transition: transform 0.24s ease, box-shadow 0.24s ease;
+    }
+    .problem-box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(239,101,101,0.16);
+    }
+    .problem-box::before {
+      content: '';
+      position: absolute;
+      top: -55px; right: -55px;
+      width: 170px; height: 170px;
+      background: radial-gradient(circle, rgba(239,101,101,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .problem-box__icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: var(--coral);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .problem-box__icon svg { width: 24px; height: 24px; color: var(--white); }
+    .problem-box__content { position: relative; }
+    .problem-box__content p { text-align: justify; }
+    @media (max-width: 540px) {
+      .problem-box { gap: 14px; }
+    }
+
+    .report-quickfacts { display: flex; gap: 12px; margin-bottom: 22px; flex-wrap: wrap; }
+    .report-quickfact { flex: 1; min-width: 150px; background: var(--cyan-light); border-radius: 8px; padding: 12px 14px; }
+    .report-quickfact__label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cyan-deep); margin-bottom: 4px; }
+    .report-quickfact__value { font-size: 0.85rem; font-weight: 700; color: var(--text-dark); }
+
+    .report-channels { margin-bottom: 22px; }
+    .report-channels__label { font-size: 0.8rem; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .report-channels__list { display: flex; gap: 8px; flex-wrap: wrap; }
+    .report-channel { font-size: 0.78rem; font-weight: 600; padding: 6px 12px; border-radius: 20px; }
+    .report-channel--tested { background: var(--cyan-light); color: var(--cyan-richer); }
+    .report-channel--missing { background: var(--coral-light); color: var(--coral-dark); }
+
+    .report-criteria { margin-top: 4px; }
+    .report-criterion { padding: 16px 0; border-bottom: 1px solid rgba(112,212,219,0.15); }
+    .report-criterion:last-child { border-bottom: none; }
+    .report-criterion__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+    .report-criterion__title { display: flex; align-items: center; gap: 10px; }
+    .report-criterion__num { width: 28px; height: 28px; border-radius: 8px; background: var(--cyan-light); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: var(--cyan-deep); flex-shrink: 0; }
+    .report-criterion__name { font-size: 0.85rem; font-weight: 800; color: var(--text-dark); }
+    .report-criterion__score { display: flex; align-items: center; gap: 10px; }
+    .report-criterion__score .report-bar-track { width: 100px; }
+    .report-criterion__detail { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; font-size: 0.85rem; }
+    @media (max-width: 700px) { .report-criterion__detail { grid-template-columns: 1fr; } }
+    .report-criterion__obs-label, .report-criterion__verbatim-label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cyan-deep); margin-bottom: 6px; }
+    .report-criterion__obs ul { list-style: none; }
+    .report-criterion__obs li { padding: 3px 0 3px 14px; position: relative; color: var(--text-dark); border-bottom: 1px solid rgba(0,0,0,0.04); }
+    .report-criterion__obs li:last-child { border-bottom: none; }
+    .report-criterion__obs li::before { content: '→'; position: absolute; left: 0; color: var(--cyan-dark); }
+    .report-criterion__verbatim { background: #f8fafa; border-radius: 6px; padding: 10px 12px; font-style: italic; color: var(--gray); border-left: 3px solid var(--cyan); }
+    .report-criterion__verbatim-label { font-style: normal; }
+    .report-criterion--compact p { font-size: 0.85rem; color: var(--gray); line-height: 1.6; }
+    .report-criterion--blur { filter: blur(5px); user-select: none; pointer-events: none; }
+    .report-overlay-wrap { position: relative; }
+    .report-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.97) 60%); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 16px; }
+
+    #criteres-section .criteria-card:hover { box-shadow: 0 10px 24px rgba(0,0,0,0.08); }
+    #criteres-section .criteria-card:nth-child(1):hover { border-color: var(--cyan); box-shadow: 0 10px 24px rgba(112,212,219,0.28); }
+    #criteres-section .criteria-card:nth-child(2):hover { border-color: var(--coral); box-shadow: 0 10px 24px rgba(239,101,101,0.28); }
+    #criteres-section .criteria-card:nth-child(3):hover { border-color: #8b5cf6; box-shadow: 0 10px 24px rgba(139,92,246,0.28); }
+    #criteres-section .criteria-card:nth-child(4):hover { border-color: #3b82f6; box-shadow: 0 10px 24px rgba(59,130,246,0.28); }
+    #criteres-section .criteria-card:nth-child(5):hover { border-color: #f59e0b; box-shadow: 0 10px 24px rgba(245,158,11,0.28); }
+    #criteres-section .criteria-card:nth-child(6):hover { border-color: #10b981; box-shadow: 0 10px 24px rgba(16,185,129,0.28); }
+
+    .pricing-grid .pricing-card { transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease; }
+    .pricing-grid .pricing-card:hover { transform: translateY(-6px); box-shadow: 0 14px 30px rgba(13,122,130,0.18); border-color: var(--cyan-deep); }
+    .pricing-grid .pricing-card.featured:hover { box-shadow: 0 14px 30px rgba(13,122,130,0.28); }
+
+    .pricing-note--info {
+      background: var(--cyan-light);
+      color: var(--cyan-deep);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .pricing-note--info svg { width: 16px; height: 16px; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar__inner">
+    <a href="index.html" class="logo"><span class="reli">Reli</span><span class="task">TASK</span></a>
+    <ul class="nav-links">
+      <li><a href="relidoc.html">ReliDOC</a></li>
+      <li><a href="relicontact.html">ReliCONTACT</a></li>
+      <li><a href="relitest.html" class="active">ReliTEST</a></li>
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="devis-special.html" class="nav-special">Demande spéciale</a></li>
+      <li><a href="#contact" class="nav-cta">Obtenir un devis</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="page-hero__eyebrow">
+      <a href="index.html" class="page-hero__back">← Retour à l'accueil</a>
+      <span class="page-hero__tag">ReliTEST</span>
+    </div>
+    <h1 class="page-hero__title">Sachez exactement ce que font vos <span class="accent">concurrents</span>.</h1>
+    <p class="page-hero__desc">ReliTEST analyse le parcours client de vos concurrents comme un vrai client: premier contact, réactivité, qualité de la réponse, expérience d'achat. Vous recevez un rapport détaillé avec scores et recommandations concrètes.</p>
+  </div>
+</section>
+
+<section class="section" id="probleme-section">
+  <div class="container">
+    <div class="problem-box reveal">
+      <div class="problem-box__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="stroke-width: 2;"><circle cx="12" cy="12" r="9" stroke-linecap="round" stroke-linejoin="round"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7v5l3 3"/></svg>
+      </div>
+      <div class="problem-box__content">
+        <div class="problem-box__label">Le problème</div>
+        <p>Vous savez que vos concurrents existent, mais vous ne savez pas vraiment comment ils fonctionnent, ce qu'ils proposent, ni comment ils traitent leurs prospects. Sans cette information, vous naviguez à l'aveugle — et vous ratez des opportunités de vous différencier là où ça compte vraiment.</p>
+      </div>
+    </div>
+
+    <span class="badge reveal">Exemple de rapport</span>
+    <h2 class="section-title reveal">Un rapport précis, avec des scores actionnables</h2>
+    <p class="section-sub reveal">Chaque concurrent est évalué sur 6 critères. Voici un aperçu du type de rapport que vous recevrez.</p>
+
+    <div class="report-preview reveal">
+      <div class="report-preview-header">
+        <div>
+          <div class="report-preview-logo">Reli<span>TASK</span> — Rapport ReliTEST</div>
+          <div style="font-size: 11px; opacity: 0.75; margin-top: 4px;">Concurrent analysé : Entreprise XYZ · Date : Novembre 2024 · Secteur : Services B2B</div>
+        </div>
+        <div class="report-preview-score">
+          <div class="num">67</div>
+          <div class="denom">/100</div>
+        </div>
+      </div>
+      <div class="report-preview-body">
+        <div class="report-quickfacts">
+          <div class="report-quickfact">
+            <div class="report-quickfact__label">Premier contact testé</div>
+            <div class="report-quickfact__value">Formulaire de contact</div>
+          </div>
+          <div class="report-quickfact">
+            <div class="report-quickfact__label">Délai de réponse</div>
+            <div class="report-quickfact__value">4h12</div>
+          </div>
+          <div class="report-quickfact">
+            <div class="report-quickfact__label">Relances reçues</div>
+            <div class="report-quickfact__value">1 (à J+3)</div>
+          </div>
+        </div>
+        <div class="report-channels">
+          <div class="report-channels__label">Canaux testés</div>
+          <div class="report-channels__list">
+            <span class="report-channel report-channel--tested">✓ Email</span>
+            <span class="report-channel report-channel--tested">✓ Formulaire de contact</span>
+            <span class="report-channel report-channel--tested">✓ Téléphone</span>
+            <span class="report-channel report-channel--missing">✕ Chat en ligne (absent)</span>
+          </div>
+        </div>
+        <div class="report-criteria">
+          <div class="report-criterion">
+            <div class="report-criterion__head">
+              <div class="report-criterion__title">
+                <div class="report-criterion__num">01</div>
+                <div class="report-criterion__name">Réactivité</div>
+              </div>
+              <div class="report-criterion__score">
+                <div class="report-bar-track"><div class="report-bar-fill" style="width:82%"></div></div>
+                <div class="report-bar-score">82/100</div>
+              </div>
+            </div>
+            <div class="report-criterion__detail">
+              <div class="report-criterion__obs">
+                <div class="report-criterion__obs-label">Observations</div>
+                <ul>
+                  <li>Réponse au formulaire en 1h47 <span style="color:var(--cyan-deep); font-weight:700;">(+)</span></li>
+                  <li>Email de confirmation automatique reçu <span style="color:var(--cyan-deep); font-weight:700;">(+)</span></li>
+                  <li>Relance proactive à J+3 <span style="color:var(--cyan-deep); font-weight:700;">(+)</span></li>
+                  <li>Aucune option de contact téléphonique directe <span style="color:var(--coral); font-weight:700;">(-)</span></li>
+                </ul>
+              </div>
+              <div class="report-criterion__verbatim">
+                <div class="report-criterion__verbatim-label">Verbatim recueilli</div>
+                "Merci pour votre message, nous revenons vers vous rapidement !" — message chaleureux mais générique, aucune mention du besoin précisé dans le formulaire.
+              </div>
+            </div>
+          </div>
+
+          <div class="report-criterion">
+            <div class="report-criterion__head">
+              <div class="report-criterion__title">
+                <div class="report-criterion__num">02</div>
+                <div class="report-criterion__name">Qualité de réponse</div>
+              </div>
+              <div class="report-criterion__score">
+                <div class="report-bar-track"><div class="report-bar-fill" style="width:74%"></div></div>
+                <div class="report-bar-score">74/100</div>
+              </div>
+            </div>
+            <div class="report-criterion__detail report-criterion--blur">
+              <div class="report-criterion__obs">
+                <div class="report-criterion__obs-label">Observations</div>
+                <ul>
+                  <li>Réponse personnalisée avec le prénom du contact <span style="color:var(--cyan-deep); font-weight:700;">(+)</span></li>
+                  <li>Délai de livraison annoncé clairement <span style="color:var(--cyan-deep); font-weight:700;">(+)</span></li>
+                  <li>Aucune question de qualification posée <span style="color:var(--coral); font-weight:700;">(-)</span></li>
+                  <li>Ton professionnel mais peu chaleureux <span style="color:var(--gray); font-weight:700;">(=)</span></li>
+                </ul>
+              </div>
+              <div class="report-criterion__verbatim">
+                <div class="report-criterion__verbatim-label">Verbatim recueilli</div>
+                "Suite à votre demande, voici les informations souhaitées." — réponse correcte mais standardisée, aucune mise en avant d'un avantage concurrentiel.
+              </div>
+            </div>
+          </div>
+
+          <div class="report-overlay-wrap">
+            <div class="report-criterion report-criterion--blur">
+              <div class="report-criterion__head">
+                <div class="report-criterion__title">
+                  <div class="report-criterion__num">03</div>
+                  <div class="report-criterion__name">Site web &amp; UX</div>
+                </div>
+                <div class="report-criterion__score">
+                  <div class="report-bar-track"><div class="report-bar-fill low" style="width:41%"></div></div>
+                  <div class="report-bar-score">41/100</div>
+                </div>
+              </div>
+              <div class="report-criterion--compact">
+                <p>Site difficile à naviguer sur mobile, menu non responsive. Page tarifs introuvable depuis l'accueil. Formulaire de contact présent mais peu visible.</p>
+              </div>
+            </div>
+            <div class="report-criterion report-criterion--blur">
+              <div class="report-criterion__head">
+                <div class="report-criterion__title">
+                  <div class="report-criterion__num">04</div>
+                  <div class="report-criterion__name">Tarification</div>
+                </div>
+                <div class="report-criterion__score">
+                  <div class="report-bar-track"><div class="report-bar-fill" style="width:68%"></div></div>
+                  <div class="report-bar-score">68/100</div>
+                </div>
+              </div>
+              <div class="report-criterion--compact">
+                <p>Grille tarifaire non publiée en ligne, devis transmis sous 24h sans détail des prestations incluses.</p>
+              </div>
+            </div>
+            <div class="report-criterion report-criterion--blur">
+              <div class="report-criterion__head">
+                <div class="report-criterion__title">
+                  <div class="report-criterion__num">05</div>
+                  <div class="report-criterion__name">Suivi commercial</div>
+                </div>
+                <div class="report-criterion__score">
+                  <div class="report-bar-track"><div class="report-bar-fill low" style="width:35%"></div></div>
+                  <div class="report-bar-score">35/100</div>
+                </div>
+              </div>
+              <div class="report-criterion--compact">
+                <p>Aucune relance après le premier échange. Pas d'email de suivi automatisé — le prospect doit relancer lui-même.</p>
+              </div>
+            </div>
+            <div class="report-criterion report-criterion--blur" style="border-bottom: none;">
+              <div class="report-criterion__head">
+                <div class="report-criterion__title">
+                  <div class="report-criterion__num">06</div>
+                  <div class="report-criterion__name">Proposition de valeur</div>
+                </div>
+                <div class="report-criterion__score">
+                  <div class="report-bar-track"><div class="report-bar-fill" style="width:59%"></div></div>
+                  <div class="report-bar-score">59/100</div>
+                </div>
+              </div>
+              <div class="report-criterion--compact">
+                <p>Positionnement peu différenciant, argumentaire générique repris du discours standard du secteur.</p>
+              </div>
+            </div>
+            <div class="report-overlay">
+              <a href="#contact" class="btn btn-primary" style="font-size:0.88rem;">Voir le rapport complet →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt" id="criteres-section">
+  <div class="container">
+    <span class="badge reveal">6 critères d'analyse</span>
+    <h2 class="section-title reveal">Ce que nous analysons pour vous</h2>
+    <p class="section-sub reveal">Chaque concurrent est évalué de manière systématique selon les mêmes 6 axes, pour une comparaison objective et exploitable.</p>
+    <div class="criteria-grid">
+      <div class="criteria-card reveal" style="border-top: 3px solid var(--cyan);">
+        <div class="criteria-card__label">Critère 1 — Réactivité</div>
+        <ul>
+          <li>Délai de réponse au premier contact</li>
+          <li>Disponibilité du service client</li>
+          <li>Qualité de l'accusé de réception</li>
+        </ul>
+      </div>
+      <div class="criteria-card reveal reveal-delay-1" style="border-top: 3px solid var(--coral);">
+        <div class="criteria-card__label">Critère 2 — Qualité de réponse</div>
+        <ul>
+          <li>Personnalisation du message</li>
+          <li>Pertinence des informations fournies</li>
+          <li>Clarté et professionnalisme du discours</li>
+        </ul>
+      </div>
+      <div class="criteria-card reveal reveal-delay-2" style="border-top: 3px solid #8b5cf6;">
+        <div class="criteria-card__label">Critère 3 — Site web & UX</div>
+        <ul>
+          <li>Navigation et lisibilité de l'offre</li>
+          <li>Expérience mobile</li>
+          <li>Présence et clarté des appels à l'action</li>
+        </ul>
+      </div>
+      <div class="criteria-card reveal" style="border-top: 3px solid #3b82f6;">
+        <div class="criteria-card__label">Critère 4 — Tarification</div>
+        <ul>
+          <li>Transparence des prix affichés</li>
+          <li>Structure de l'offre commerciale</li>
+          <li>Rapport qualité / prix perçu</li>
+        </ul>
+      </div>
+      <div class="criteria-card reveal reveal-delay-1" style="border-top: 3px solid #f59e0b;">
+        <div class="criteria-card__label">Critère 5 — Suivi commercial</div>
+        <ul>
+          <li>Relances et fréquence de suivi</li>
+          <li>Personnalisation du suivi</li>
+          <li>Capacité à créer une relation durable</li>
+        </ul>
+      </div>
+      <div class="criteria-card reveal reveal-delay-2" style="border-top: 3px solid #10b981;">
+        <div class="criteria-card__label">Critère 6 — Proposition de valeur</div>
+        <ul>
+          <li>Clarté du positionnement</li>
+          <li>Différenciation perçue vs le marché</li>
+          <li>Cohérence de la communication</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing-section">
+  <div class="container">
+    <span class="badge reveal">Tarifs ReliTEST</span>
+    <h2 class="section-title reveal">Choisissez le nombre de concurrents à analyser</h2>
+    <p class="section-sub reveal">Un rapport détaillé par concurrent, avec recommandations personnalisées pour votre positionnement.</p>
+    <div class="pricing-grid reveal">
+      <div class="pricing-card">
+        <div class="pricing-card__label">FOCUS</div>
+        <div class="pricing-card__volume">1 concurrent</div>
+        <div class="pricing-card__price">95€</div>
+        <div class="pricing-card__unit">/ rapport</div>
+        <div class="pricing-card__option">Rapport complet</div>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-card__label">DUO</div>
+        <div class="pricing-card__volume">2 concurrents</div>
+        <div class="pricing-card__price">165€</div>
+        <div class="pricing-card__unit">/ lot</div>
+        <div class="pricing-card__option">2 rapports + synthèse</div>
+        <div class="pricing-card__savings">−13%</div>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-card__label">PANORAMA</div>
+        <div class="pricing-card__volume">3 concurrents</div>
+        <div class="pricing-card__price">225€</div>
+        <div class="pricing-card__unit">/ lot</div>
+        <div class="pricing-card__option">3 rapports + synthèse</div>
+        <div class="pricing-card__savings">Le plus choisi · −21%</div>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-card__label">MARCHÉ</div>
+        <div class="pricing-card__volume">Plus de 3 concurrents</div>
+        <div class="pricing-card__price">Sur devis</div>
+        <div class="pricing-card__unit">&nbsp;</div>
+        <div class="pricing-card__option">Étude sur mesure</div>
+      </div>
+    </div>
+    <div class="pricing-note pricing-note--info reveal">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="stroke-width: 2;"><circle cx="12" cy="12" r="9" stroke-linecap="round" stroke-linejoin="round"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 8h.01M11 12h1v4h1"/></svg>
+      Livraison en 5 à 7 jours ouvrés · Devis gratuit sous 48h · Rapport en PDF
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt">
+  <div class="container">
+    <span class="badge reveal">Ce qui est inclus</span>
+    <h2 class="section-title reveal">Ce que contient chaque rapport ReliTEST</h2>
+    <div class="includes-grid reveal">
+      <div class="includes-box includes-box--yes">
+        <div class="includes-box__title">
+          <span class="check">✓</span> Inclus dans chaque rapport
+        </div>
+        <ul>
+          <li><span class="check">✓</span> Test complet du parcours prospect (contact, réponse, relance)</li>
+          <li><span class="check">✓</span> Analyse du site web et de l'expérience mobile</li>
+          <li><span class="check">✓</span> Évaluation de la tarification et de l'offre commerciale</li>
+          <li><span class="check">✓</span> Score global sur 100 par concurrent</li>
+          <li><span class="check">✓</span> Points forts et faiblesses identifiés</li>
+          <li><span class="check">✓</span> Synthèse comparative si plusieurs concurrents</li>
+        </ul>
+      </div>
+      <div class="includes-box includes-box--no">
+        <div class="includes-box__title">
+          <span class="cross">✕</span> Non inclus
+        </div>
+        <ul>
+          <li><span class="cross">✕</span> Mise en œuvre des recommandations</li>
+          <li><span class="cross">✕</span> Analyse financière approfondie (bilans, comptes de résultat)</li>
+          <li><span class="cross">✕</span> Veille (option à demander)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact-section" id="contact">
+  <div class="container">
+    <span class="badge reveal">Demander un rapport ReliTEST</span>
+    <h2 class="section-title reveal">Qui sont vos concurrents à analyser ?</h2>
+    <p class="section-sub reveal">Indiquez-nous les entreprises à analyser et votre secteur. Devis gratuit sous 48h.</p>
+    <form id="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required />
+        </div>
+        <div class="form-group">
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" name="nom" placeholder="Votre nom" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="vous@exemple.com" required />
+        </div>
+        <div class="form-group">
+          <label for="forfait">Forfait souhaité</label>
+          <select id="forfait" name="forfait">
+            <option value="">Choisir</option>
+            <option value="focus">FOCUS — 1 concurrent (95€)</option>
+            <option value="duo">DUO — 2 concurrents (165€)</option>
+            <option value="panorama">PANORAMA — 3 concurrents (225€)</option>
+            <option value="marche">MARCHÉ — Plus de 3 concurrents (sur devis)</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label for="concurrents">Concurrents à analyser & contexte</label>
+          <textarea id="concurrents" name="concurrents" placeholder="Noms et sites web des concurrents à analyser, votre secteur d'activité, ce que vous cherchez à comprendre ou améliorer…"></textarea>
+        </div>
+      </div>
+      <div class="form-submit">
+        <button type="submit" class="btn btn-white">Envoyer ma demande →</button>
+      </div>
+      <div class="form-success" id="form-success">Merci ! Votre message a bien été envoyé. Nous vous répondrons sous 48h.</div>
+    </form>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer__logo"><span class="reli">Reli</span><span class="task">TASK</span></div>
+  <div class="footer__info">SIRET : 372865328762928763 · <a href="mailto:relitask@etik.com">relitask@etik.com</a></div>
+  <div class="footer__legal">
+    <a href="mentions-legales.html">Mentions légales</a>
+    <a href="mentions-legales.html#cgv">CGV</a>
+  </div>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver((e) => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  const form = document.getElementById('contact-form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      const action = form.getAttribute('action');
+      if (action && action.includes('YOUR_FORM_ID')) {
+        e.preventDefault();
+        alert('Formulaire non configuré. Remplacez YOUR_FORM_ID par votre identifiant Formspree.');
+        return;
+      }
+      e.preventDefault();
+      fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
+        .then(r => { if (r.ok) { form.reset(); document.getElementById('form-success').style.display = 'block'; } });
+    });
+  }
+</script>
+</body>
+</html>
