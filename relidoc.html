@@ -6,11 +6,34 @@
   <title>ReliDOC — Refonte de documents | ReliTASK</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Paytone+One&family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Paytone+One&family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Raleway:wght@300;400;500;600;700;800&family=Fredoka:wght@500;600;700&family=Teko:wght@500;600;700&family=Barlow+Condensed:wght@400;500;600;700&family=Big+Shoulders+Stencil:wght@600;700;800&family=Barlow:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
+    #contact { scroll-margin-top: 90px; }
+    body { overflow-x: hidden; }
+    .contact-cta-bar { background: linear-gradient(135deg, var(--cyan-deep), var(--cyan-richer)); border-radius: 20px; padding: 32px 38px; display: flex; align-items: center; justify-content: space-between; gap: 22px; color: var(--white); box-shadow: 0 18px 44px rgba(13,122,130,0.22); }
+    .contact-cta-bar__left { display: flex; align-items: center; gap: 16px; }
+    .contact-cta-bar__icon { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .contact-cta-bar__icon svg { width: 24px; height: 24px; color: var(--white); }
+    .contact-cta-bar__text strong { display: block; font-size: 1.08rem; font-weight: 800; margin-bottom: 3px; }
+    .contact-cta-bar__text p { margin: 0; font-size: 0.88rem; color: rgba(255,255,255,0.75); }
+    .contact-cta-bar__btn { background: var(--white); color: var(--cyan-deep); padding: 12px 24px; border-radius: 10px; font-weight: 800; font-size: 0.88rem; white-space: nowrap; display: inline-flex; align-items: center; gap: 7px; transition: transform 0.2s ease, box-shadow 0.2s ease; text-decoration: none; flex-shrink: 0; }
+    .contact-cta-bar__btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,0.18); }
+    .contact-cta-bar__btn svg { width: 15px; height: 15px; }
+    @media (max-width: 700px) { .contact-cta-bar { flex-direction: column; text-align: center; padding: 28px 22px; } .contact-cta-bar__left { flex-direction: column; } }
     .page-hero { padding-bottom: 40px; }
     #probleme-section { padding-top: 16px; padding-bottom: 0; }
-    #avant-apres-section { padding-top: 0; }
+    #avant-apres-section { padding-top: 0; padding-bottom: 14px; }
+    .comparison-section { padding-top: 14px !important; }
+    .pricing-note--info {
+      background: var(--cyan-light);
+      color: var(--cyan-deep);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .pricing-note--info svg { width: 16px; height: 16px; flex-shrink: 0; }
 
     .problem-box {
       border-left: none;
@@ -63,18 +86,24 @@
       scrollbar-width: none;
       -ms-overflow-style: none;
       --jp-primary: #6d28d9;
-      --jp-accent: #f59e0b;
-      --jp-light: #f4eefc;
-      --jp-highlight-bg: #fef3e2;
-      --proc2-primary: #be123c;
-      --proc2-accent: #f97316;
-      --proc2-light: #fdeef1;
+      --jp-accent: #facc15;
+      --jp-light: #f3eefd;
+      --jp-highlight-bg: #fff8da;
+      --proc2-primary: #1d6fa5;
+      --proc2-accent: #2f9e44;
+      --proc2-yellow: #f4b400;
+      --proc2-light: #eef7f0;
       --proc2-highlight-bg: #fdf2e9;
-      --btp-primary: #166534;
-      --btp-accent: #facc15;
-      --btp-light: #ecfdf5;
-      --btp-highlight-bg: #fef9c3;
-      --btp-alert: #b45309;
+      --btp-primary: #c2410c;
+      --btp-accent: #1f2937;
+      --btp-bg: #f8f6f1;
+      --btp-light: #fbece1;
+      --btp-highlight-bg: #fdecec;
+      --btp-alert: #b91c1c;
+      --btp-blue: #51606b;
+      --fac-dark: #1e293b;
+      --fac-accent: #92400e;
+      --fac-light: #fef3c7;
     }
     .doc-preview-grid::-webkit-scrollbar { display: none; }
     .doc-preview-card {
@@ -111,7 +140,7 @@
       position: relative;
       background: var(--white);
     }
-    .jp-doc, .proc2-doc, .btp-doc {
+    .jp-doc, .proc2-doc, .btp-doc, .fac-doc {
       position: absolute;
       top: 0; left: 0;
       width: 200%;
@@ -123,53 +152,84 @@
     .doc-preview-card--jp .doc-preview-card__label { color: var(--jp-primary); background: var(--jp-light); }
     .doc-preview-card--proc2 .doc-preview-card__label { color: var(--proc2-primary); background: var(--proc2-light); }
     .doc-preview-card--btp .doc-preview-card__label { color: var(--btp-primary); background: var(--btp-light); }
+    .doc-preview-card--cat .doc-preview-card__label { color: #0f4c75; background: #e8f4fd; }
 
     /* Fiche de poste */
-    .jp-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-    .jp-logo { font-family: 'Paytone One', sans-serif; font-size: 22px; color: var(--jp-primary); }
-    .jp-logo span { color: var(--jp-accent); }
-    .jp-ref { font-size: 13px; color: var(--gray); text-align: right; }
-    .jp-title { font-family: 'Paytone One', sans-serif; font-size: 24px; color: var(--jp-primary); line-height: 1.2; margin-bottom: 4px; }
-    .jp-title span { color: var(--jp-accent); }
-    .jp-subtitle { font-size: 14px; color: var(--gray); margin-bottom: 8px; }
-    .jp-infogrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-    .jp-info { background: var(--jp-light); border-radius: 8px; padding: 8px 12px; }
-    .jp-info span { font-size: 12px; text-transform: uppercase; color: var(--jp-primary); display: block; margin-bottom: 3px; letter-spacing: 0.06em; font-weight: 700; }
-    .jp-info strong { font-size: 15px; color: var(--text-dark); }
-    .jp-block { margin-bottom: 8px; }
-    .jp-block__title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em; color: var(--jp-primary); border-bottom: 3px solid var(--jp-accent); padding-bottom: 3px; margin-bottom: 5px; }
+    .jp-doc { padding: 0 !important; font-family: 'Manrope', sans-serif; color: #1d1530; background: #fff; }
+    .jp-layout { display: flex; align-items: stretch; min-height: 100%; }
+    .jp-sidebar { width: 36%; flex-shrink: 0; background: linear-gradient(165deg, #3b0f7a, #6d28d9 55%, #8b5cf6); padding: 22px 14px 18px; position: relative; overflow: hidden; }
+    .jp-sidebar::before { content: ''; position: absolute; top: -40px; right: -45px; width: 140px; height: 140px; background: radial-gradient(circle, rgba(250,204,21,0.35), transparent 70%); border-radius: 50%; }
+    .jp-sidebar::after { content: ''; position: absolute; bottom: -50px; left: -40px; width: 130px; height: 130px; background: radial-gradient(circle, rgba(255,255,255,0.12), transparent 70%); border-radius: 50%; }
+    .jp-sidebar-logo { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; color: white; margin-bottom: 3px; position: relative; z-index: 1; }
+    .jp-sidebar-logo span { color: var(--jp-accent); }
+    .jp-sidebar-ref { font-family: 'Space Grotesk', sans-serif; font-size: 9.5px; color: rgba(255,255,255,0.6); margin-bottom: 16px; position: relative; z-index: 1; }
+    .jp-fact { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 12px; position: relative; z-index: 1; }
+    .jp-fact-icon { width: 22px; height: 22px; border-radius: 7px; background: rgba(250,204,21,0.18); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .jp-fact-icon svg { width: 12px; height: 12px; color: var(--jp-accent); }
+    .jp-fact span { display: block; font-size: 8px; text-transform: uppercase; letter-spacing: 0.07em; color: rgba(255,255,255,0.55); font-weight: 600; }
+    .jp-fact strong { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 11.5px; font-weight: 600; color: white; line-height: 1.25; }
+    .jp-gauge { margin-top: 14px; position: relative; z-index: 1; }
+    .jp-gauge-label { display: block; font-size: 8px; text-transform: uppercase; letter-spacing: 0.07em; color: rgba(255,255,255,0.55); margin-bottom: 5px; font-weight: 600; }
+    .jp-gauge-bar { display: flex; gap: 3px; margin-bottom: 4px; }
+    .jp-gauge-seg { flex: 1; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.18); }
+    .jp-gauge-seg.active { background: var(--jp-accent); }
+    .jp-gauge-text { font-family: 'Space Grotesk', sans-serif; font-size: 10px; color: white; font-weight: 600; }
+    .jp-sidebar-divider { height: 1px; background: rgba(255,255,255,0.16); margin: 15px 0 12px; position: relative; z-index: 1; }
+    .jp-timeline-label { display: block; font-size: 8px; text-transform: uppercase; letter-spacing: 0.07em; color: rgba(255,255,255,0.55); margin-bottom: 9px; font-weight: 600; position: relative; z-index: 1; }
+    .jp-tl-step { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 9px; position: relative; z-index: 1; }
+    .jp-tl-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--jp-accent); flex-shrink: 0; margin-top: 3px; position: relative; }
+    .jp-tl-step:not(:last-child) .jp-tl-dot::after { content: ''; position: absolute; top: 9px; left: 3px; width: 1.5px; height: 24px; background: rgba(255,255,255,0.25); }
+    .jp-tl-text { font-family: 'Manrope', sans-serif; font-size: 9px; color: rgba(255,255,255,0.8); line-height: 1.3; }
+    .jp-tl-text strong { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 10.5px; color: white; font-weight: 600; margin-bottom: 1px; }
+    .jp-main { flex: 1; padding: 20px 22px 18px; background: #fff; min-width: 0; }
+    .jp-title { font-family: 'Space Grotesk', sans-serif; font-size: 21px; font-weight: 700; color: #1d1530; line-height: 1.1; margin-bottom: 4px; }
+    .jp-title-mark { background: var(--jp-accent); padding: 1px 6px; border-radius: 4px; }
+    .jp-subtitle { font-family: 'Manrope', sans-serif; font-size: 10.5px; color: #6b6580; margin-bottom: 9px; }
+    .jp-intro { font-size: 11px; color: #4b465c; line-height: 1.42; margin-bottom: 11px; }
+    .jp-cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; margin-bottom: 9px; }
+    .jp-block { margin-bottom: 9px; }
+    .jp-block__title { font-family: 'Space Grotesk', sans-serif; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--jp-primary); margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
+    .jp-block__title::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--jp-accent); flex-shrink: 0; }
     .jp-block ul { list-style: none; }
-    .jp-block li { font-size: 13px; padding: 1px 0 1px 22px; position: relative; color: var(--text-dark); }
-    .jp-block li::before { content: '✓'; position: absolute; left: 0; color: var(--jp-primary); font-weight: 900; font-size: 13px; }
-    .jp-block--highlight { background: var(--jp-highlight-bg); border-left: 5px solid var(--jp-accent); border-radius: 0 10px 10px 0; padding: 8px 12px; }
-    .jp-block--highlight .jp-block__title { color: var(--jp-accent); border-bottom-color: var(--jp-accent); }
-    .jp-block--highlight li::before { color: var(--jp-accent); }
-    .jp-intro { font-size: 14px; color: var(--gray); line-height: 1.4; margin-bottom: 8px; }
-    .jp-footer { margin-top: 4px; padding-top: 8px; border-top: 2px dashed rgba(0,0,0,0.12); font-size: 12px; color: var(--gray); line-height: 1.35; }
+    .jp-block li { font-size: 10px; padding: 1.5px 0 1.5px 13px; position: relative; color: #332d47; line-height: 1.35; }
+    .jp-block li::before { content: '›'; position: absolute; left: 0; color: var(--jp-primary); font-weight: 800; }
+    .jp-tags { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 0 10px; }
+    .jp-tag { font-family: 'Space Grotesk', sans-serif; font-size: 9px; font-weight: 600; padding: 3px 9px; border-radius: 20px; background: var(--jp-light); color: var(--jp-primary); border: 1px solid rgba(109,40,217,0.18); }
+    .jp-block--highlight { background: var(--jp-highlight-bg); border-radius: 10px; padding: 9px 12px; margin-bottom: 9px; border-left: 4px solid var(--jp-accent); }
+    .jp-block--highlight .jp-block__title { color: #8a6d0a; }
+    .jp-block--highlight .jp-block__title::before { background: #8a6d0a; }
+    .jp-block--highlight li::before { color: #8a6d0a; }
+    .jp-footer { font-size: 9.5px; color: #6b6580; line-height: 1.4; padding-top: 7px; border-top: 1.5px dashed rgba(109,40,217,0.2); }
     .jp-footer strong { color: var(--jp-primary); }
 
-    /* Procédure de fermeture */
+    /* Procédure de fermeture — BioVert */
+    .proc2-doc { font-family: 'DM Sans', sans-serif; }
+    .proc2-stripe { height: 9px; margin: -28px -26px 12px -26px; background: repeating-linear-gradient(110deg, var(--proc2-primary) 0 18px, var(--proc2-yellow) 18px 30px, var(--proc2-accent) 30px 48px); }
     .proc2-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid var(--proc2-accent); padding-bottom: 10px; margin-bottom: 12px; }
-    .proc2-logo { font-family: 'Paytone One', sans-serif; font-size: 20px; color: var(--proc2-primary); }
-    .proc2-logo small { display: block; font-size: 12px; color: var(--gray); font-weight: 400; font-family: 'DM Sans', sans-serif; margin-top: 2px; }
+    .proc2-logo { font-family: 'Fredoka', sans-serif; font-size: 21px; font-weight: 700; color: var(--proc2-primary); display: flex; align-items: center; gap: 6px; }
+    .proc2-logo svg { width: 20px; height: 20px; flex-shrink: 0; color: var(--proc2-accent); }
+    .proc2-logo small { display: block; font-size: 11.5px; color: var(--gray); font-weight: 500; font-family: 'DM Sans', sans-serif; margin-top: 2px; }
     .proc2-docinfo { text-align: right; font-size: 12px; color: var(--gray); }
-    .proc2-docinfo strong { color: var(--proc2-accent); font-size: 14px; display: block; }
-    .proc2-title { font-family: 'Paytone One', sans-serif; font-size: 22px; color: var(--proc2-primary); margin-bottom: 6px; }
+    .proc2-docinfo strong { color: var(--proc2-primary); font-size: 14px; display: block; font-family: 'Fredoka', sans-serif; }
+    .proc2-title { font-family: 'Fredoka', sans-serif; font-size: 21px; font-weight: 600; color: var(--proc2-primary); margin-bottom: 6px; position: relative; }
     .proc2-title span { color: var(--proc2-accent); }
+    .proc2-title-fruit { position: absolute; top: -6px; right: 0; width: 34px; height: 34px; opacity: 0.9; }
     .proc2-subtitle { font-size: 13px; color: var(--gray); margin-bottom: 10px; }
     .proc2-steps { display: flex; flex-direction: column; gap: 6px; }
     .proc2-step { display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: flex-start; }
-    .proc2-num { width: 30px; height: 30px; border-radius: 50%; background: var(--proc2-primary); color: white; display: flex; align-items: center; justify-content: center; font-family: 'Paytone One', sans-serif; font-size: 13px; flex-shrink: 0; }
-    .proc2-num.coral { background: var(--proc2-accent); }
-    .proc2-step-content { border: 1.5px solid rgba(0,0,0,0.08); border-radius: 8px; padding: 8px 10px; }
-    .proc2-step-content h4 { font-size: 13px; font-weight: 800; color: var(--proc2-primary); margin-bottom: 2px; }
+    .proc2-num { width: 30px; height: 30px; border-radius: 9px; background: var(--proc2-primary); color: white; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 13px; flex-shrink: 0; }
+    .proc2-num.coral { background: var(--proc2-yellow); color: var(--text-dark); }
+    .proc2-step:nth-child(3n+2) .proc2-num:not(.coral) { background: var(--proc2-accent); }
+    .proc2-step-content { border: 1.5px solid rgba(0,0,0,0.08); border-radius: 8px; padding: 8px 10px; background: rgba(238,247,240,0.4); }
+    .proc2-step-content h4 { font-family: 'Fredoka', sans-serif; font-size: 13px; font-weight: 600; color: var(--proc2-primary); margin-bottom: 2px; }
     .proc2-step-content p { font-size: 11px; color: var(--gray); line-height: 1.3; }
     .proc2-meta { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-    .proc2-meta-card { background: var(--proc2-light); border-radius: 8px; padding: 8px 10px; }
-    .proc2-meta-card span { font-size: 11px; text-transform: uppercase; color: var(--proc2-primary); display: block; margin-bottom: 2px; letter-spacing: 0.06em; font-weight: 700; }
-    .proc2-meta-card strong { font-size: 13px; color: var(--text-dark); }
-    .proc2-footer { margin-top: 8px; padding-top: 8px; border-top: 2px dashed rgba(0,0,0,0.12); font-size: 11px; color: var(--gray); line-height: 1.45; }
-    .proc2-footer strong { color: var(--proc2-accent); }
+    .proc2-meta-card { background: var(--proc2-light); border-radius: 8px; padding: 8px 10px; border: 1px solid rgba(47,158,68,0.18); }
+    .proc2-meta-card span { font-size: 11px; text-transform: uppercase; color: var(--proc2-accent); display: block; margin-bottom: 2px; letter-spacing: 0.06em; font-weight: 700; }
+    .proc2-meta-card strong { font-size: 13px; color: var(--text-dark); font-family: 'Fredoka', sans-serif; font-weight: 600; }
+    .proc2-footer { margin-top: 8px; padding-top: 8px; border-top: 2px dashed rgba(47,158,68,0.25); font-size: 11px; color: var(--gray); line-height: 1.45; display: flex; align-items: center; gap: 8px; }
+    .proc2-footer strong { color: var(--proc2-primary); }
+    .proc2-footer svg { width: 22px; height: 22px; flex-shrink: 0; color: var(--proc2-yellow); }
 
     /* Avant / Après (images) */
     .doc-preview-card__body--ba { padding: 0; }
@@ -198,63 +258,229 @@
     }
     .ba-img.active { opacity: 1; }
 
-    /* Procédure d'ouverture BTP — mise en page "document officiel" */
-    .btp-doc { font-family: Georgia, 'Times New Roman', serif; color: var(--text-dark); }
-    .btp-stripe {
-      height: 8px;
-      margin: -28px -26px 10px -26px;
-      background: repeating-linear-gradient(135deg, var(--btp-primary) 0 12px, var(--btp-accent) 12px 24px);
-    }
-    .btp-letterhead { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; border-bottom: 2px solid var(--btp-primary); padding-bottom: 6px; margin-bottom: 8px; }
-    .btp-company { font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: 0.04em; color: var(--btp-primary); text-transform: uppercase; }
-    .btp-company small { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 8.5px; font-weight: 400; letter-spacing: 0; color: var(--gray); text-transform: none; margin-top: 3px; }
-    .btp-refbox { font-family: 'IBM Plex Mono', monospace; font-size: 9px; line-height: 1.55; color: var(--text-dark); text-align: right; border: 1px solid var(--text-dark); padding: 4px 8px; flex-shrink: 0; }
-    .btp-refbox strong { display: block; font-size: 10px; }
-    .btp-title { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-dark); margin-bottom: 3px; line-height: 1.15; }
+    /* Procédure d'ouverture BTP — fiche officielle chantier, fond clair */
+    .btp-doc { font-family: 'Barlow', sans-serif; color: var(--btp-accent); background: var(--btp-bg); }
+    .doc-preview-card--btp .doc-preview-card__body--doc { background: var(--btp-bg); }
+    .btp-topbar { height: 5px; margin: -28px -26px 13px -26px; background: var(--btp-primary); }
+    .btp-letterhead { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 9px; }
+    .btp-letterhead-left { display: flex; align-items: center; gap: 9px; }
+    .btp-logo-badge { width: 28px; height: 28px; border-radius: 50%; background: var(--btp-accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .btp-logo-badge svg { width: 15px; height: 15px; color: var(--btp-primary); }
+    .btp-company { font-family: 'Big Shoulders Stencil', sans-serif; font-size: 19px; font-weight: 700; letter-spacing: 0.03em; color: var(--btp-accent); text-transform: uppercase; line-height: 1; }
+    .btp-company small { display: block; font-family: 'Barlow', sans-serif; font-size: 8px; color: #6b7280; text-transform: none; font-weight: 400; margin-top: 2px; letter-spacing: 0; }
+    .btp-refline { text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 7.5px; color: #6b7280; line-height: 1.5; }
+    .btp-refline strong { display: block; color: var(--btp-primary); font-size: 9px; }
+    .btp-title { font-family: 'Big Shoulders Stencil', sans-serif; font-size: 25px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.01em; color: var(--btp-accent); margin-bottom: 3px; line-height: 1; padding-bottom: 6px; border-bottom: 2px solid var(--btp-primary); }
     .btp-title span { color: var(--btp-primary); }
-    .btp-subtitle { font-family: 'IBM Plex Mono', monospace; font-size: 8.5px; color: var(--gray); margin-bottom: 8px; line-height: 1.5; }
-    .btp-fields { display: grid; grid-template-columns: 1fr 1fr 1fr; border: 1px solid var(--text-dark); margin-bottom: 8px; }
-    .btp-field { border-right: 1px solid var(--text-dark); padding: 3px 6px; }
+    .btp-subtitle { font-family: 'Barlow', sans-serif; font-size: 11px; color: #6b7280; margin: 6px 0 8px; line-height: 1.4; }
+    .btp-fields { display: grid; grid-template-columns: 1fr 1fr 1fr; border: 1px solid #e2ddd3; margin-bottom: 10px; background: #fff; border-radius: 5px; overflow: hidden; }
+    .btp-field { border-right: 1px solid #e2ddd3; padding: 5px 8px; }
     .btp-field:last-child { border-right: none; }
-    .btp-field span { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 8px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--gray); margin-bottom: 2px; }
-    .btp-field strong { font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 600; }
+    .btp-field span { display: block; font-family: 'Barlow', sans-serif; font-size: 7px; text-transform: uppercase; letter-spacing: 0.06em; color: #9a8f80; margin-bottom: 2px; font-weight: 600; }
+    .btp-field strong { font-family: 'Big Shoulders Stencil', sans-serif; font-size: 14px; font-weight: 700; color: var(--btp-accent); }
     .btp-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
-    .btp-section { margin-bottom: 7px; }
-    .btp-section__title { font-family: 'Oswald', sans-serif; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--white); background: var(--btp-primary); padding: 3px 6px; }
-    .btp-section--alert .btp-section__title { background: var(--btp-alert); }
-    .btp-table { width: 100%; border-collapse: collapse; font-size: 9.5px; }
-    .btp-table th, .btp-table td { border: 1px solid #cbd5d1; padding: 1.5px 5px; text-align: left; }
-    .btp-table th { font-family: 'IBM Plex Mono', monospace; font-size: 7.5px; text-transform: uppercase; background: var(--btp-light); color: var(--btp-primary); font-weight: 600; }
-    .btp-table td.btp-check { text-align: center; width: 20px; font-family: 'IBM Plex Mono', monospace; }
-    .btp-section--alert .btp-table th { background: var(--btp-highlight-bg); color: var(--btp-alert); }
-    .btp-signoff { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--text-dark); }
-    .btp-signbox span { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 8px; text-transform: uppercase; color: var(--gray); margin-bottom: 12px; }
-    .btp-signbox .btp-line { border-bottom: 1px solid var(--text-dark); }
-    .btp-stamp {
-      width: 58px; height: 58px; border-radius: 50%; border: 2px solid var(--btp-primary);
-      display: flex; align-items: center; justify-content: center; text-align: center;
-      font-family: 'Oswald', sans-serif; font-size: 8px; font-weight: 700; text-transform: uppercase;
-      color: var(--btp-primary); transform: rotate(-12deg); line-height: 1.25;
+    .btp-section { margin-bottom: 8px; }
+    .btp-section:last-child { margin-bottom: 0; }
+    .btp-section__title { font-family: 'Barlow', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--btp-accent); padding-bottom: 3px; margin-bottom: 4px; border-bottom: 1.5px solid var(--btp-primary); display: flex; align-items: center; gap: 6px; }
+    .btp-section__title-icon { width: 16px; height: 16px; border-radius: 50%; background: var(--btp-primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .btp-section__title-icon svg { width: 9px; height: 9px; color: white; }
+    .btp-section--blue .btp-section__title { border-bottom-color: var(--btp-blue); }
+    .btp-section--blue .btp-section__title-icon { background: var(--btp-blue); }
+    .btp-section--blue .btp-item::before { border-color: var(--btp-blue); }
+    .btp-section--alert .btp-section__title { border-bottom-color: var(--btp-alert); }
+    .btp-section--alert .btp-section__title-icon { background: var(--btp-alert); }
+    .btp-checklist { display: flex; flex-direction: column; gap: 2px; }
+    .btp-item { display: flex; align-items: center; gap: 7px; padding: 2.5px 0; font-size: 10.5px; color: var(--btp-accent); line-height: 1.3; }
+    .btp-item::before { content: ''; flex-shrink: 0; width: 10px; height: 10px; border: 1.5px solid var(--btp-primary); border-radius: 2px; background: #fff; }
+    .btp-section--alert .btp-item::before { border-color: var(--btp-alert); }
+    .btp-obs { margin-top: 9px; }
+    .btp-obs-lines { border: 1px solid #e2ddd3; border-radius: 4px; background: #fff; }
+    .btp-obs-line { border-bottom: 1px solid #ece7dd; height: 17px; }
+    .btp-obs-line:last-child { border-bottom: none; }
+    .btp-signoff { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 9px; padding-top: 7px; border-top: 1.5px solid #e2ddd3; gap: 10px; }
+    .btp-signbox { flex: 1; }
+    .btp-signbox span { display: block; font-family: 'Barlow', sans-serif; font-size: 7px; text-transform: uppercase; letter-spacing: 0.07em; color: #9a8f80; margin-bottom: 11px; font-weight: 600; }
+    .btp-signbox .btp-line { border-bottom: 1px solid #b3a890; }
+    .btp-stamp { width: 50px; height: 50px; flex-shrink: 0; border-radius: 50%; border: 2.5px solid var(--btp-primary); display: flex; align-items: center; justify-content: center; text-align: center; font-family: 'Big Shoulders Stencil', sans-serif; font-size: 8px; font-weight: 700; text-transform: uppercase; color: var(--btp-primary); transform: rotate(-10deg); line-height: 1.2; }
+    .btp-legalnote { margin-top: 8px; font-family: 'Barlow', sans-serif; font-size: 8px; font-style: italic; color: #9a8f80; text-align: center; line-height: 1.4; }
+
+    /* Facture scierie */
+    .doc-preview-card--fac .doc-preview-card__label { color: var(--fac-dark); background: #f1f5f9; }
+    .fac-doc { font-family: 'DM Sans', sans-serif; color: var(--fac-dark); }
+    .fac-header { background: var(--fac-dark); margin: -28px -26px 11px -26px; padding: 11px 16px; display: flex; justify-content: space-between; align-items: flex-start; }
+    .fac-company-block { display: flex; align-items: center; gap: 9px; }
+    .fac-logo-badge { width: 28px; height: 28px; border-radius: 50%; background: var(--fac-accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .fac-logo-badge svg { width: 16px; height: 16px; color: white; }
+    .fac-company-name { font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 700; color: white; letter-spacing: 0.05em; text-transform: uppercase; }
+    .fac-company-sub { font-size: 8px; color: rgba(255,255,255,0.6); margin-top: 3px; line-height: 1.45; }
+    .fac-invoice-label { font-family: 'Raleway', sans-serif; font-size: 20px; font-weight: 800; color: #fbbf24; text-align: right; letter-spacing: 0.1em; text-transform: uppercase; }
+    .fac-invoice-meta { font-family: 'IBM Plex Mono', monospace; font-size: 7.5px; color: rgba(255,255,255,0.65); text-align: right; margin-top: 3px; line-height: 1.6; }
+    .fac-parties { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 9px; padding: 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; }
+    .fac-party-label { font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fac-accent); margin-bottom: 3px; }
+    .fac-party-name { font-size: 10.5px; font-weight: 700; margin-bottom: 2px; }
+    .fac-party-info { font-size: 8px; color: #64748b; line-height: 1.45; }
+    .fac-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+    .fac-table th { background: var(--fac-dark); color: white; font-size: 7.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 6px; text-align: left; }
+    .fac-table th.fac-r { text-align: right; }
+    .fac-table td { font-size: 9px; padding: 3.5px 6px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    .fac-table td.fac-r { text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 8.5px; }
+    .fac-table tr:nth-child(even) td { background: #f8fafc; }
+    .fac-ref { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 7px; color: #94a3b8; margin-top: 1px; }
+    .fac-totals { margin-left: auto; width: 52%; }
+    .fac-total-row { display: flex; justify-content: space-between; padding: 2.5px 8px; font-size: 9px; }
+    .fac-total-row.fac-sep { border-top: 1px solid #e2e8f0; margin-top: 2px; padding-top: 4px; }
+    .fac-total-row.fac-ttc { background: var(--fac-dark); color: white; font-weight: 700; font-size: 10px; border-radius: 3px; padding: 5px 8px; margin-top: 3px; }
+    .fac-total-row.fac-solde { background: var(--fac-accent); color: white; font-weight: 700; font-size: 10px; border-radius: 3px; padding: 5px 8px; margin-top: 2px; }
+    .fac-footer { margin-top: 9px; padding-top: 6px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; }
+    .fac-payment strong { display: block; font-size: 8.5px; font-weight: 700; color: var(--fac-dark); margin-bottom: 2px; }
+    .fac-payment p { font-size: 7.5px; color: #64748b; line-height: 1.5; margin: 0; }
+    .fac-iban { font-family: 'IBM Plex Mono', monospace; font-size: 7px; color: var(--fac-dark); font-weight: 600; }
+    .fac-legal { font-size: 6.5px; color: #94a3b8; line-height: 1.4; text-align: right; }
+
+    /* Catalogue commercial / technique — visionneuse images */
+    .doc-preview-card__body--cat { padding: 0; }
+    .cat-viewer { position: absolute; inset: 0; }
+    .cat-img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: top;
+      opacity: 0; transition: opacity 0.38s ease;
     }
+    .cat-img.active { opacity: 1; }
+    .cat-nav {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+      width: 34px; height: 34px; border-radius: 50%; border: none;
+      background: rgba(255,255,255,0.9); box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 900; line-height: 1; color: #0f4c75;
+      transition: background 0.2s ease;
+    }
+    .cat-nav:hover { background: var(--white); }
+    .cat-nav--prev { left: 8px; }
+    .cat-nav--next { right: 8px; }
+    .cat-dots {
+      position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 5;
+      display: flex; gap: 6px; align-items: center;
+    }
+    .cat-dot {
+      width: 7px; height: 7px; border-radius: 50%; border: none; padding: 0; cursor: pointer;
+      background: rgba(255,255,255,0.5); transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .cat-dot.active { background: var(--white); transform: scale(1.3); }
 
     /* Carrousel des aperçus */
     .dp-arrow {
       position: absolute; top: 50%; transform: translateY(-50%);
-      width: 40px; height: 40px; border-radius: 50%; border: none;
-      background: var(--white); box-shadow: var(--shadow-hover);
+      width: 50px; height: 50px; border-radius: 50%;
+      border: 1.5px solid rgba(13,122,130,0.14);
+      background: var(--white); box-shadow: 0 6px 20px rgba(13,122,130,0.18);
       display: flex; align-items: center; justify-content: center;
-      font-size: 20px; font-weight: 900; line-height: 1; color: var(--cyan-deep); cursor: pointer;
-      z-index: 6; transition: opacity 0.2s ease;
+      color: var(--cyan-deep); cursor: pointer;
+      z-index: 6; transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
     }
-    .dp-arrow--prev { left: -16px; }
-    .dp-arrow--next { right: -16px; }
+    .dp-arrow svg { width: 20px; height: 20px; transition: transform 0.25s ease; }
+    .dp-arrow:hover {
+      background: linear-gradient(135deg, var(--cyan-deep), var(--cyan-richer));
+      color: var(--white);
+      border-color: transparent;
+      box-shadow: 0 10px 28px rgba(13,122,130,0.34);
+      transform: translateY(-50%) scale(1.08);
+    }
+    .dp-arrow--prev:hover svg { transform: translateX(-2px); }
+    .dp-arrow--next:hover svg { transform: translateX(2px); }
+    .dp-arrow:active { transform: translateY(-50%) scale(0.94); }
+    .dp-arrow--prev { left: -22px; }
+    .dp-arrow--next { right: -22px; }
     .dp-arrow:disabled { opacity: 0; pointer-events: none; }
     .doc-preview-carousel:not(.has-overflow) .dp-arrow { display: none; }
 
     @media (max-width: 980px) {
       .doc-preview-card { min-width: 82vw; }
+      .dp-arrow { width: 44px; height: 44px; }
+      .dp-arrow svg { width: 18px; height: 18px; }
       .dp-arrow--prev { left: 4px; }
       .dp-arrow--next { right: 4px; }
+    }
+
+    /* ===== HAMBURGER MENU ===== */
+    .nav-burger {
+      display: none;
+      background: none;
+      border: none;
+      padding: 8px;
+      cursor: pointer;
+      flex-direction: column;
+      gap: 5px;
+      border-radius: 8px;
+      transition: background 0.18s ease;
+    }
+    .nav-burger:hover { background: rgba(112,212,219,0.1); }
+    .nav-burger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text-dark);
+      border-radius: 2px;
+      transition: transform 0.25s ease, opacity 0.2s ease;
+    }
+    .navbar.nav-open .nav-burger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .navbar.nav-open .nav-burger span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .navbar.nav-open .nav-burger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ===== MOBILE OVERRIDES ===== */
+    @media (max-width: 768px) {
+      .nav-burger { display: flex; }
+
+      /* Surcharge du display:none de style.css */
+      .nav-links {
+        display: none !important;
+        position: absolute;
+        top: 66px; left: 0; right: 0;
+        background: rgba(255,255,255,0.98);
+        backdrop-filter: blur(16px);
+        flex-direction: column !important;
+        gap: 0 !important;
+        padding: 8px 0 18px;
+        box-shadow: 0 12px 32px rgba(13,122,130,0.12);
+        border-top: 1px solid rgba(112,212,219,0.2);
+        z-index: 99;
+        list-style: none;
+      }
+      .navbar.nav-open .nav-links { display: flex !important; }
+      .nav-links li { width: 100%; }
+      .nav-links a {
+        padding: 13px 24px !important;
+        display: block;
+        font-size: 1rem !important;
+        border-bottom: 1px solid rgba(112,212,219,0.1);
+      }
+      .nav-links li:last-child a { border-bottom: none; }
+      .nav-cta {
+        margin: 10px 24px 0 !important;
+        border-radius: 8px !important;
+        text-align: center !important;
+        display: block !important;
+      }
+
+      /* Hero mobile */
+      .page-hero { padding: 44px 0 28px; }
+      .page-hero__title { font-size: clamp(1.5rem, 6vw, 2.2rem); }
+      .page-hero__desc { font-size: 0.95rem; }
+
+      /* Carousel mobile */
+      .dp-arrow--prev { left: 2px; }
+      .dp-arrow--next { right: 2px; }
+      .doc-preview-grid { gap: 14px; }
+
+      /* Section padding */
+      .problem-box { flex-direction: column; gap: 12px; }
+    }
+
+    @media (max-width: 480px) {
+      .doc-preview-card { min-width: 92vw; }
+      .dp-arrow { width: 38px; height: 38px; }
+      .dp-arrow svg { width: 16px; height: 16px; }
+      .page-hero { padding: 32px 0 20px; }
     }
   </style>
 </head>
@@ -271,6 +497,9 @@
       <li><a href="devis-special.html" class="nav-special">Demande spéciale</a></li>
       <li><a href="#contact" class="nav-cta">Obtenir un devis</a></li>
     </ul>
+    <button class="nav-burger" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
@@ -303,15 +532,19 @@
   <div class="container">
     <span class="badge reveal">Avant / Après</span>
     <h2 class="section-title reveal">Voyez la différence par vous-même</h2>
-    <p class="section-sub reveal">Quelques exemples de documents repensés avec la charte graphique ReliTASK.</p>
+    <p class="section-sub reveal">Quelques exemples de documents repensés et créés par ReliTASK.</p>
   </div>
 </section>
 
 <section class="comparison-section">
   <div class="container">
     <div class="doc-preview-carousel">
-      <button type="button" class="dp-arrow dp-arrow--prev" aria-label="Aperçu précédent">‹</button>
-      <button type="button" class="dp-arrow dp-arrow--next" aria-label="Aperçu suivant">›</button>
+      <button type="button" class="dp-arrow dp-arrow--prev" aria-label="Aperçu précédent">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button type="button" class="dp-arrow dp-arrow--next" aria-label="Aperçu suivant">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
       <div class="doc-preview-grid">
       <div class="doc-preview-card doc-preview-card--jp reveal">
         <div class="doc-preview-card__label">
@@ -320,49 +553,129 @@
         </div>
         <div class="doc-preview-card__body doc-preview-card__body--doc">
           <div class="jp-doc">
-          <div class="jp-header">
-            <div class="jp-logo">Reli<span>TASK</span></div>
-            <div class="jp-ref">Réf. LOG-2025-031<br>CDI · Temps plein</div>
+          <div class="jp-layout">
+            <div class="jp-sidebar">
+              <div class="jp-sidebar-logo">Reli<span>TASK</span></div>
+              <div class="jp-sidebar-ref">Réf. LOG-2025-031</div>
+              <div class="jp-fact">
+                <div class="jp-fact-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+                <div><span>Lieu</span><strong>Saint-Priest (69)</strong></div>
+              </div>
+              <div class="jp-fact">
+                <div class="jp-fact-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+                <div><span>Horaires</span><strong>35h · 6h–13h30</strong></div>
+              </div>
+              <div class="jp-fact">
+                <div class="jp-fact-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+                <div><span>Rémunération</span><strong>1 850 € + primes</strong></div>
+              </div>
+              <div class="jp-fact">
+                <div class="jp-fact-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></div>
+                <div><span>Contrat</span><strong>CDI, statut ouvrier</strong></div>
+              </div>
+              <div class="jp-fact">
+                <div class="jp-fact-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-7 4 4 6-9 4 5"/></svg></div>
+                <div><span>CACES requis</span><strong>R489 cat. 1B</strong></div>
+              </div>
+              <div class="jp-fact">
+                <div class="jp-fact-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg></div>
+                <div><span>Démarrage</span><strong>Dès que possible</strong></div>
+              </div>
+              <div class="jp-gauge">
+                <span class="jp-gauge-label">Expérience requise</span>
+                <div class="jp-gauge-bar">
+                  <div class="jp-gauge-seg active"></div>
+                  <div class="jp-gauge-seg"></div>
+                  <div class="jp-gauge-seg"></div>
+                  <div class="jp-gauge-seg"></div>
+                </div>
+                <div class="jp-gauge-text">Débutant(e) accepté(e)</div>
+              </div>
+              <div class="jp-sidebar-divider"></div>
+              <span class="jp-timeline-label">Processus de recrutement</span>
+              <div class="jp-tl-step">
+                <div class="jp-tl-dot"></div>
+                <div class="jp-tl-text"><strong>1. Candidature</strong>CV + lettre de motivation</div>
+              </div>
+              <div class="jp-tl-step">
+                <div class="jp-tl-dot"></div>
+                <div class="jp-tl-text"><strong>2. Entretien</strong>Réponse sous 10 jours ouvrés</div>
+              </div>
+              <div class="jp-tl-step">
+                <div class="jp-tl-dot"></div>
+                <div class="jp-tl-text"><strong>3. Visite médicale</strong>Aptitude au poste requise</div>
+              </div>
+              <div class="jp-tl-step">
+                <div class="jp-tl-dot"></div>
+                <div class="jp-tl-text"><strong>4. Intégration</strong>Formation interne &amp; tutorat</div>
+              </div>
+            </div>
+            <div class="jp-main">
+              <div class="jp-title">Préparateur(trice) <span class="jp-title-mark">de commandes</span></div>
+              <div class="jp-subtitle">Logidis Expéditions · Rattachement : Responsable d'exploitation</div>
+              <div class="jp-intro">Logidis Expéditions exploite un entrepôt de 4 500 m² dédié à la distribution d'équipements de la maison auprès de revendeurs et de particuliers. Le service Expéditions traite en moyenne 800 commandes par jour.</div>
+              <div class="jp-cols2">
+                <div class="jp-block">
+                  <div class="jp-block__title">Activités</div>
+                  <ul>
+                    <li>Préparer les commandes via le WMS (picking, scan, contrôle quantités)</li>
+                    <li>Charger / décharger les camions, vérifier les bons de transport</li>
+                    <li>Réapprovisionner les zones via chariot autoporté (CACES 1B)</li>
+                    <li>Conditionner et filmer les palettes avant expédition</li>
+                    <li>Signaler toute anomalie de stock ou de produit</li>
+                  </ul>
+                </div>
+                <div class="jp-block">
+                  <div class="jp-block__title">Profil requis</div>
+                  <ul>
+                    <li>CACES R489 1B, ou formation interne possible</li>
+                    <li>Première expérience appréciée — débutant(e) accepté(e)</li>
+                    <li>Rigueur sur les procédures et délais d'expédition</li>
+                    <li>Aptitude au port de charges jusqu'à 25 kg</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="jp-block__title">Compétences clés</div>
+              <div class="jp-tags">
+                <span class="jp-tag">CACES R489 1B</span>
+                <span class="jp-tag">WMS / Scan</span>
+                <span class="jp-tag">Picking</span>
+                <span class="jp-tag">Port de charges</span>
+                <span class="jp-tag">Esprit d'équipe</span>
+                <span class="jp-tag">Rigueur</span>
+              </div>
+              <div class="jp-block jp-block--highlight">
+                <div class="jp-block__title">Rémunération &amp; avantages</div>
+                <ul>
+                  <li>Prime de productivité mensuelle (jusqu'à 150 €) · Panier repas 5,50 €/jour</li>
+                  <li>Mutuelle prise en charge à 60 % · 13e mois après 1 an d'ancienneté</li>
+                  <li>Formation CACES financée en interne pour les non-titulaires</li>
+                </ul>
+              </div>
+              <div class="jp-footer">CV et lettre de motivation à adresser à <strong>recrutement@logidis-expeditions.fr</strong> — entretien sous 10 jours ouvrés. Poste soumis à visite médicale d'aptitude.</div>
+            </div>
           </div>
-          <div class="jp-title">Préparateur(trice) <span>de commandes</span></div>
-          <div class="jp-subtitle">Entrepôt logistique · Service Expéditions · Prise de poste dès que possible</div>
-          <div class="jp-intro">Notre entrepôt de 4 500 m² traite plus de 800 commandes par jour. Dans le cadre de notre développement, nous recherchons un(e) préparateur(trice) de commandes pour renforcer l'équipe expéditions.</div>
-          <div class="jp-infogrid">
-            <div class="jp-info"><span>Lieu</span><strong>Saint-Priest (69)</strong></div>
-            <div class="jp-info"><span>Horaires</span><strong>35h · 6h–13h30</strong></div>
-            <div class="jp-info"><span>Rémunération</span><strong>1 850 € brut/mois</strong></div>
-            <div class="jp-info"><span>Contrat</span><strong>CDI</strong></div>
-            <div class="jp-info"><span>Expérience</span><strong>Débutant accepté</strong></div>
-            <div class="jp-info"><span>Démarrage</span><strong>Dès que possible</strong></div>
           </div>
-          <div class="jp-block">
-            <div class="jp-block__title">Vos missions</div>
-            <ul>
-              <li>Préparer les commandes selon les bons de picking, dans le respect des délais</li>
-              <li>Charger et décharger les camions, vérifier la conformité des livraisons</li>
-              <li>Utiliser le système de gestion d'entrepôt (scanner, terminal embarqué)</li>
-              <li>Ranger, étiqueter et approvisionner les zones de stockage</li>
-              <li>Contrôler la qualité et l'état des produits avant expédition</li>
-            </ul>
-          </div>
-          <div class="jp-block">
-            <div class="jp-block__title">Profil recherché</div>
-            <ul>
-              <li>CACES 1-3 apprécié, débutants motivés acceptés</li>
-              <li>Rigueur, ponctualité et sens de l'organisation</li>
-              <li>Capacité à travailler en équipe et à respecter les cadences</li>
-              <li>À l'aise avec les outils numériques (scanner, terminal)</li>
-            </ul>
-          </div>
-          <div class="jp-block jp-block--highlight">
-            <div class="jp-block__title">Avantages</div>
-            <ul>
-              <li>Prime de productivité mensuelle · Panier repas</li>
-              <li>Mutuelle d'entreprise · CSE · 13e mois</li>
-              <li>Formation interne et perspectives d'évolution</li>
-            </ul>
-          </div>
-          <div class="jp-footer">Candidature à adresser à <strong>recrutement@entreprise.fr</strong> — entretien sous 10 jours.</div>
+        </div>
+      </div>
+
+      <div class="doc-preview-card doc-preview-card--cat reveal">
+        <div class="doc-preview-card__label">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          Catalogue commercial
+        </div>
+        <div class="doc-preview-card__body doc-preview-card__body--doc doc-preview-card__body--cat">
+          <div class="cat-viewer">
+            <img src="images/1.png" alt="Catalogue — page 1" class="cat-img active" data-index="0">
+            <img src="images/2.png" alt="Catalogue — page 2" class="cat-img" data-index="1">
+            <img src="images/3.png" alt="Catalogue — page 3" class="cat-img" data-index="2">
+            <button type="button" class="cat-nav cat-nav--prev" aria-label="Image précédente">‹</button>
+            <button type="button" class="cat-nav cat-nav--next" aria-label="Image suivante">›</button>
+            <div class="cat-dots">
+              <button type="button" class="cat-dot active" data-dot="0"></button>
+              <button type="button" class="cat-dot" data-dot="1"></button>
+              <button type="button" class="cat-dot" data-dot="2"></button>
+            </div>
           </div>
         </div>
       </div>
@@ -370,15 +683,25 @@
       <div class="doc-preview-card doc-preview-card--proc2 reveal">
         <div class="doc-preview-card__label">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-          Procédure
+          Procédure de fermeture
         </div>
         <div class="doc-preview-card__body doc-preview-card__body--doc">
           <div class="proc2-doc">
+          <div class="proc2-stripe"></div>
           <div class="proc2-header">
-            <div class="proc2-logo">BioVert<small>Fruits & légumes bio</small></div>
+            <div class="proc2-logo">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C17 20 22 12 22 6c-2 .5-2.5-1-5-1-2.5 0-3.5 1.5-7 1.5C10 6.5 9 8 9 8s4-2 8 0z"/></svg>
+              BioVert<small>Fruits & légumes bio</small>
+            </div>
             <div class="proc2-docinfo"><strong>PROC-MAG-007</strong>Version 1.0 · Mise à jour : janv. 2025</div>
           </div>
-          <div class="proc2-title">Procédure de <span>fermeture du magasin</span></div>
+          <div class="proc2-title">Procédure de <span>fermeture du magasin</span>
+            <svg class="proc2-title-fruit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+              <path d="M32 14c11 0 19 9 19 21s-8 21-19 21-19-9-19-21 8-21 19-21z" fill="#1d6fa5"/>
+              <path d="M32 14c2-6 6-9 11-10-1 5-4 9-9 11l-2-1z" fill="#2f9e44"/>
+              <ellipse cx="25" cy="27" rx="4" ry="6" fill="#ffffff" opacity="0.35"/>
+            </svg>
+          </div>
           <div class="proc2-subtitle">Rayon fruits & légumes · À effectuer chaque soir avant fermeture</div>
           <div class="proc2-meta">
             <div class="proc2-meta-card"><span>Responsable</span><strong>Resp. de rayon</strong></div>
@@ -457,7 +780,13 @@
               </div>
             </div>
           </div>
-          <div class="proc2-footer">À cocher et signer par l'employé(e) en charge de la fermeture · <strong>Signature : ____________</strong></div>
+          <div class="proc2-footer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+              <path d="M30 12c8 2 14 14 12 26-1 6-6 10-11 9-7-1-12-9-11-18 1-9 5-16 10-17z" fill="#f4b400"/>
+              <path d="M30 12c1-4 3-7 6-8 0 4-1 7-4 9l-2-1z" fill="#2f9e44"/>
+            </svg>
+            À cocher et signer par l'employé(e) en charge de la fermeture · <strong>Signature : ____________</strong>
+          </div>
           </div>
         </div>
       </div>
@@ -474,91 +803,106 @@
           </div>
           <div class="ba-images">
             <img src="images/avant.png" alt="Avant — fiche technique d'origine" class="ba-img active" data-state="avant">
-            <img src="images/apres.png" alt="Après ReliDOC — fiche technique redesignée" class="ba-img" data-state="apres">
+            <img src="images/vrai-apres.png" alt="Après ReliDOC — fiche technique redesignée" class="ba-img" data-state="apres">
           </div>
         </div>
       </div>
 
       <div class="doc-preview-card doc-preview-card--btp reveal">
         <div class="doc-preview-card__label">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.008"/></svg>
-          Procédure d'ouverture (BTP)
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          Procédure d'ouverture
         </div>
         <div class="doc-preview-card__body doc-preview-card__body--doc">
           <div class="btp-doc">
-            <div class="btp-stripe"></div>
+            <div class="btp-topbar"></div>
             <div class="btp-letterhead">
-              <div class="btp-company">BâtiSécure
-                <small>BTP — Gros œuvre & VRD · 14 rue des Artisans, 69800 Saint-Priest · SIRET 812 345 678 00021</small>
+              <div class="btp-letterhead-left">
+                <div class="btp-logo-badge">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 00-7 7v3H3v3h18v-3h-2V9a7 7 0 00-7-7zM9 17h6v2a3 3 0 01-6 0v-2z"/></svg>
+                </div>
+                <div class="btp-company">BâtiSécure
+                  <small>BTP — Gros œuvre & VRD · 14 rue des Artisans, 69800 Saint-Priest</small>
+                </div>
               </div>
-              <div class="btp-refbox">
-                <strong>DOC. PROC-SEC-014</strong>
-                Rév. 03 — 06/2026<br>
-                Chantier : Lot 7, Rés. Les Tilleuls<br>
-                Page 1/1
+              <div class="btp-refline">
+                <strong>PROC-SEC-014</strong>
+                Rév. 03 — 06/2026<br>Chantier Lot 7
               </div>
             </div>
             <div class="btp-title">Procédure d'ouverture <span>de chantier</span></div>
-            <div class="btp-subtitle">Contrôles de sécurité obligatoires avant tout démarrage d'activité — réf. Code du travail art. R4534-1 et s., PGC applicable au site.</div>
+            <div class="btp-subtitle">Contrôles de sécurité obligatoires avant tout démarrage · Réf. Code du travail art. R4534-1 et s.</div>
             <div class="btp-fields">
               <div class="btp-field"><span>Responsable</span><strong>Chef de chantier</strong></div>
-              <div class="btp-field"><span>Fréquence</span><strong>Chaque jour ouvré</strong></div>
-              <div class="btp-field"><span>Durée moyenne</span><strong>20 — 25 min</strong></div>
+              <div class="btp-field"><span>Fréquence</span><strong>Chaque matin</strong></div>
+              <div class="btp-field"><span>Durée</span><strong>20 — 25 min</strong></div>
             </div>
             <div class="btp-cols">
               <div>
                 <div class="btp-section">
-                  <div class="btp-section__title">1. Équipements de protection individuelle</div>
-                  <table class="btp-table">
-                    <tr><th>Point de contrôle</th><th class="btp-check">OK</th><th class="btp-check">NOK</th></tr>
-                    <tr><td>Casque de chantier porté</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                    <tr><td>Gilet haute visibilité</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                    <tr><td>Chaussures de sécurité S3</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                    <tr><td>Gants de protection adaptés</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                    <tr><td>Lunettes / protection auditive</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                  </table>
+                  <div class="btp-section__title"><span class="btp-section__title-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 00-7 7v3H3v3h18v-3h-2V9a7 7 0 00-7-7zM9 17h6v2a3 3 0 01-6 0v-2z"/></svg></span>1. EPI obligatoires</div>
+                  <div class="btp-checklist">
+                    <div class="btp-item">Casque de chantier</div>
+                    <div class="btp-item">Gilet haute visibilité</div>
+                    <div class="btp-item">Chaussures de sécurité S3</div>
+                    <div class="btp-item">Gants de protection</div>
+                    <div class="btp-item">Lunettes / protection auditive</div>
+                  </div>
                 </div>
                 <div class="btp-section">
-                  <div class="btp-section__title">2. Signalisation &amp; balisage</div>
-                  <table class="btp-table">
-                    <tr><th>Point de contrôle</th><th class="btp-check">OK</th><th class="btp-check">NOK</th></tr>
-                    <tr><td>Panneaux d'accès en place</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                    <tr><td>Périmètre balisé / clôturé</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                    <tr><td>Zones piétons / engins séparées</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                    <tr><td>Affichage du règlement intérieur</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                  </table>
+                  <div class="btp-section__title"><span class="btp-section__title-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 17H3z"/><line x1="12" y1="10" x2="12" y2="14"/><line x1="12" y1="16.5" x2="12" y2="16.6"/></svg></span>2. Signalisation &amp; balisage</div>
+                  <div class="btp-checklist">
+                    <div class="btp-item">Panneaux d'accès posés</div>
+                    <div class="btp-item">Périmètre balisé / clôturé</div>
+                    <div class="btp-item">Zones piétons / engins séparées</div>
+                    <div class="btp-item">Affichage règlement intérieur</div>
+                  </div>
+                </div>
+                <div class="btp-section">
+                  <div class="btp-section__title"><span class="btp-section__title-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0115-6.7M21 12a9 9 0 01-15 6.7"/><path d="M16 3v4h-4M8 21v-4h4"/></svg></span>6. Environnement &amp; déchets</div>
+                  <div class="btp-checklist">
+                    <div class="btp-item">Bennes de tri sélectif en place</div>
+                    <div class="btp-item">Zone de stockage des déchets dangereux</div>
+                    <div class="btp-item">Kit anti-pollution accessible</div>
+                  </div>
                 </div>
               </div>
               <div>
-                <div class="btp-section">
-                  <div class="btp-section__title">3. Engins &amp; installations</div>
-                  <table class="btp-table">
-                    <tr><th>Point de contrôle</th><th class="btp-check">OK</th><th class="btp-check">NOK</th></tr>
-                    <tr><td>Contrôle visuel des engins</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                    <tr><td>Élingues et dispositifs de levage</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                    <tr><td>Garde-corps / échafaudages</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                    <tr><td>Réseaux électriques de chantier</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                  </table>
+                <div class="btp-section btp-section--blue">
+                  <div class="btp-section__title"><span class="btp-section__title-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.2 4.2l2.9 2.9M16.9 16.9l2.9 2.9M1 12h4M19 12h4M4.2 19.8l2.9-2.9M16.9 7.1l2.9-2.9"/></svg></span>3. Engins &amp; installations</div>
+                  <div class="btp-checklist">
+                    <div class="btp-item">Contrôle visuel des engins</div>
+                    <div class="btp-item">Élingues et dispositifs de levage</div>
+                    <div class="btp-item">Garde-corps / échafaudages</div>
+                    <div class="btp-item">Réseaux électriques vérifiés</div>
+                  </div>
                 </div>
                 <div class="btp-section btp-section--alert">
-                  <div class="btp-section__title">4. Secours &amp; urgences</div>
-                  <table class="btp-table">
-                    <tr><th>Point de contrôle</th><th class="btp-check">OK</th><th class="btp-check">NOK</th></tr>
-                    <tr><td>Trousse de secours accessible</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                    <tr><td>Numéros d'urgence affichés</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                    <tr><td>Point de rassemblement signalé</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                    <tr><td>Sauveteur SST présent</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                  </table>
+                  <div class="btp-section__title"><span class="btp-section__title-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 8h-3V5a1 1 0 00-1-1h-6a1 1 0 00-1 1v3H5a1 1 0 00-1 1v6a1 1 0 001 1h3v3a1 1 0 001 1h6a1 1 0 001-1v-3h3a1 1 0 001-1V9a1 1 0 00-1-1z"/></svg></span>4. Secours &amp; urgences</div>
+                  <div class="btp-checklist">
+                    <div class="btp-item">Trousse de secours accessible</div>
+                    <div class="btp-item">Numéros d'urgence affichés</div>
+                    <div class="btp-item">Point de rassemblement signalé</div>
+                    <div class="btp-item">Sauveteur SST présent</div>
+                  </div>
                 </div>
                 <div class="btp-section">
-                  <div class="btp-section__title">5. Permis &amp; autorisations</div>
-                  <table class="btp-table">
-                    <tr><th>Point de contrôle</th><th class="btp-check">OK</th><th class="btp-check">NOK</th></tr>
-                    <tr><td>Permis de feu (travaux à chaud)</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                    <tr><td>Autorisations conduite engins</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                    <tr><td>Plan de prévention signé</td><td class="btp-check">☑</td><td class="btp-check">☐</td></tr>
-                  </table>
+                  <div class="btp-section__title"><span class="btp-section__title-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 12l2 2 4-4"/></svg></span>5. Permis &amp; autorisations</div>
+                  <div class="btp-checklist">
+                    <div class="btp-item">Permis de feu (travaux à chaud)</div>
+                    <div class="btp-item">Autorisations conduite engins</div>
+                    <div class="btp-item">Plan de prévention signé</div>
+                  </div>
                 </div>
+              </div>
+            </div>
+            <div class="btp-obs">
+              <div class="btp-section__title"><span class="btp-section__title-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>Observations / Remarques</div>
+              <div class="btp-obs-lines">
+                <div class="btp-obs-line"></div>
+                <div class="btp-obs-line"></div>
+                <div class="btp-obs-line"></div>
+                <div class="btp-obs-line"></div>
               </div>
             </div>
             <div class="btp-signoff">
@@ -566,9 +910,107 @@
               <div class="btp-signbox"><span>Coordinateur SPS — nom &amp; date</span><div class="btp-line">&nbsp;</div></div>
               <div class="btp-stamp">Visa<br>Sécurité<br>Conforme</div>
             </div>
+            <div class="btp-legalnote">Document à conserver sur site pendant toute la durée du chantier — conforme aux préconisations OPPBTP.</div>
           </div>
         </div>
       </div>
+
+      <!-- CARTE 6 : Facture scierie -->
+      <div class="doc-preview-card doc-preview-card--fac reveal">
+        <div class="doc-preview-card__label">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          Facture commerciale
+        </div>
+        <div class="doc-preview-card__body doc-preview-card__body--doc">
+          <div class="fac-doc">
+            <div class="fac-header">
+              <div class="fac-company-block">
+                <div class="fac-logo-badge">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18M6 6l12 12M18 6L6 18"/></svg>
+                </div>
+                <div>
+                  <div class="fac-company-name">Scierie Martel &amp; Fils</div>
+                  <div class="fac-company-sub">Scierie artisanale — Bois massifs &amp; débits sur mesure<br>Z.A. les Quatre Vents · 88400 Gérardmer · SIRET 412 837 920 00024<br>TVA FR 45 412 837 920 · RCS Épinal B 412 837 920</div>
+                </div>
+              </div>
+              <div>
+                <div class="fac-invoice-label">Facture</div>
+                <div class="fac-invoice-meta">N° 2026-0847<br>Date : 12/06/2026<br>Échéance : 12/07/2026</div>
+              </div>
+            </div>
+            <div class="fac-parties">
+              <div>
+                <div class="fac-party-label">Émetteur</div>
+                <div class="fac-party-name">Scierie Martel &amp; Fils</div>
+                <div class="fac-party-info">Z.A. les Quatre Vents<br>88400 Gérardmer<br>contact@scierie-martel.fr · 03 29 63 11 47</div>
+              </div>
+              <div>
+                <div class="fac-party-label">Client</div>
+                <div class="fac-party-name">Constructions Rémi Jacquet</div>
+                <div class="fac-party-info">18 route des Crêtes<br>67530 Ottrott<br>remi.jacquet@crj-construction.fr</div>
+              </div>
+            </div>
+            <table class="fac-table">
+              <thead>
+                <tr>
+                  <th>Désignation</th>
+                  <th class="fac-r">Qté</th>
+                  <th class="fac-r">P.U. HT</th>
+                  <th class="fac-r">Total HT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Planches de chêne massif — ep. 27 mm, larg. 200 mm<span class="fac-ref">REF CHE-27-200 · Séchage naturel 18 mois · qualité menuiserie</span></td>
+                  <td class="fac-r">120 ml</td>
+                  <td class="fac-r">6,80 €</td>
+                  <td class="fac-r">816,00 €</td>
+                </tr>
+                <tr>
+                  <td>Planches de sapin raboté — ep. 22 mm, larg. 150 mm<span class="fac-ref">REF SAP-22-150 · Certifié PEFC · raboté 4 faces</span></td>
+                  <td class="fac-r">200 ml</td>
+                  <td class="fac-r">3,20 €</td>
+                  <td class="fac-r">640,00 €</td>
+                </tr>
+                <tr>
+                  <td>Madriers douglas — 63×175 mm, bruts de sciage<span class="fac-ref">REF DOU-63-175 · Douglas vert · lot de 8 pièces 4m</span></td>
+                  <td class="fac-r">8 pcs</td>
+                  <td class="fac-r">28,50 €</td>
+                  <td class="fac-r">228,00 €</td>
+                </tr>
+                <tr>
+                  <td>Planches pin traité autoclave CL3<span class="fac-ref">REF PIN-CL3-20 · ep. 20 mm · traitement brun · ext. sol</span></td>
+                  <td class="fac-r">80 ml</td>
+                  <td class="fac-r">4,10 €</td>
+                  <td class="fac-r">328,00 €</td>
+                </tr>
+                <tr>
+                  <td>Transport &amp; livraison sur site (camion bâché)<span class="fac-ref">Livraison : 15/06/2026 — Ottrott (67)</span></td>
+                  <td class="fac-r">1 fft</td>
+                  <td class="fac-r">120,00 €</td>
+                  <td class="fac-r">120,00 €</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="fac-totals">
+              <div class="fac-total-row"><span>Total HT</span><span>2 132,00 €</span></div>
+              <div class="fac-total-row"><span>TVA 20 %</span><span>426,40 €</span></div>
+              <div class="fac-total-row fac-ttc"><span>Total TTC</span><span>2 558,40 €</span></div>
+              <div class="fac-total-row fac-sep"><span>Acompte versé</span><span>− 500,00 €</span></div>
+              <div class="fac-total-row fac-solde"><span>Solde à régler</span><span>2 058,40 €</span></div>
+            </div>
+            <div class="fac-footer">
+              <div class="fac-payment">
+                <strong>Modalités de règlement</strong>
+                <p>Virement bancaire à 30 jours date de facture<br>Référence à rappeler : FAC-2026-0847</p>
+                <p class="fac-iban">IBAN : FR76 3000 4028 3700 0100 7481 943<br>BIC : BNPAFRPPXXX — BNP Paribas Épinal</p>
+              </div>
+              <div class="fac-legal">Pénalités de retard : 3× taux légal<br>Indemnité forfaitaire : 40 €<br>TVA non applicable si auto-entrepreneur</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       </div>
     </div>
   </div>
@@ -578,7 +1020,7 @@
   <div class="container">
     <span class="badge reveal">Tarifs — Documents longs</span>
     <h2 class="section-title reveal">Refonte de documents (rapports, guides, procédures)</h2>
-    <p class="section-sub reveal">Tarif au volume pour les documents de plusieurs pages.</p>
+    <p class="section-sub reveal">Tarif au volume pour la refonte de vos documents existants déjà rédigés.</p>
     <div class="pricing-grid reveal">
       <div class="pricing-card">
         <div class="pricing-card__label">STARTER</div>
@@ -610,10 +1052,9 @@
         <div class="pricing-card__option">Devis sous 48h · gratuit et sans engagement</div>
       </div>
     </div>
-    <div class="pricing-note reveal">Devis gratuit et sans engagement · Livraison en 3 à 5 jours ouvrés</div>
-
-    <span class="badge reveal" style="margin-top: 56px; display:inline-block;">Tarifs — Fiches courtes</span>
-    <h2 class="section-title reveal">Fiches de poste, fiches techniques, fiches produit</h2>
+    <span class="badge reveal" style="margin-top: 36px; display:inline-block;">Tarifs — Fiches courtes</span>
+    <h2 class="section-title reveal">Élaboration de fiches de poste, fiches techniques, fiches produit</h2>
+    <p class="section-sub reveal" style="text-align: justify;">Contrairement à la refonte de documents existants, ces fiches sont créées intégralement de zéro après un audit et un entretien avec vous (par téléphone ou en visioconférence).</p>
     <div class="pricing-grid reveal">
       <div class="pricing-card">
         <div class="pricing-card__label">UNITAIRE</div>
@@ -688,7 +1129,8 @@
     <span class="badge reveal">Demander un devis ReliDOC</span>
     <h2 class="section-title reveal">Envoyez-nous votre document</h2>
     <p class="section-sub reveal">Décrivez votre besoin, joignez votre document existant si vous en avez un. Devis gratuit sous 48h.</p>
-    <form id="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+    <form id="contact-form" action="https://formspree.io/f/mkoaawno" method="POST">
+      <input type="hidden" name="_subject" value="[ReliTASK] Nouveau devis — ReliDOC">
       <div class="form-grid">
         <div class="form-group">
           <label for="prenom">Prénom</label>
@@ -727,9 +1169,25 @@
   </div>
 </section>
 
+<section class="section">
+  <div class="container">
+    <div class="contact-cta-bar reveal">
+      <div class="contact-cta-bar__left">
+        <div class="contact-cta-bar__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        </div>
+        <div class="contact-cta-bar__text">
+          <strong>Une question avant de vous lancer ?</strong>
+          <p>Email, téléphone, WhatsApp — toutes nos coordonnées sont sur la page À propos.</p>
+        </div>
+      </div>
+      <a href="a-propos.html#contact" class="contact-cta-bar__btn">Nous contacter <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+  </div>
+</section>
+
 <footer class="footer">
   <div class="footer__logo"><span class="reli">Reli</span><span class="task">TASK</span></div>
-  <div class="footer__info">SIRET : 372865328762928763 · <a href="mailto:relitask@etik.com">relitask@etik.com</a></div>
   <div class="footer__legal">
     <a href="mentions-legales.html">Mentions légales</a>
     <a href="mentions-legales.html#cgv">CGV</a>
@@ -751,40 +1209,76 @@
     });
   });
 
+  document.querySelectorAll('.cat-viewer').forEach(viewer => {
+    const imgs = viewer.querySelectorAll('.cat-img');
+    const dots = viewer.querySelectorAll('.cat-dot');
+    let idx = 0;
+    function show(n) {
+      idx = (n + imgs.length) % imgs.length;
+      imgs.forEach((img, i) => img.classList.toggle('active', i === idx));
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === idx));
+    }
+    viewer.querySelector('.cat-nav--prev').addEventListener('click', () => show(idx - 1));
+    viewer.querySelector('.cat-nav--next').addEventListener('click', () => show(idx + 1));
+    dots.forEach((dot, i) => dot.addEventListener('click', () => show(i)));
+  });
+
   document.querySelectorAll('.doc-preview-carousel').forEach(carousel => {
     const grid = carousel.querySelector('.doc-preview-grid');
     const prev = carousel.querySelector('.dp-arrow--prev');
     const next = carousel.querySelector('.dp-arrow--next');
-    function update() {
-      const hasOverflow = grid.scrollWidth > grid.clientWidth + 2;
-      carousel.classList.toggle('has-overflow', hasOverflow);
-      prev.disabled = grid.scrollLeft <= 2;
-      next.disabled = grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 2;
-    }
-    function step() {
+    function cardStep() {
       const card = grid.querySelector('.doc-preview-card');
       const gap = parseFloat(getComputedStyle(grid).gap) || 0;
       return (card ? card.getBoundingClientRect().width : 0) + gap;
     }
-    prev.addEventListener('click', () => grid.scrollBy({ left: -step(), behavior: 'smooth' }));
-    next.addEventListener('click', () => grid.scrollBy({ left: step(), behavior: 'smooth' }));
+    function update() {
+      const hasOverflow = grid.scrollWidth > grid.clientWidth + 2;
+      carousel.classList.toggle('has-overflow', hasOverflow);
+      prev.disabled = !hasOverflow;
+      next.disabled = !hasOverflow;
+    }
+    next.addEventListener('click', () => {
+      const atEnd = grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 4;
+      if (atEnd) {
+        grid.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        grid.scrollBy({ left: cardStep(), behavior: 'smooth' });
+      }
+    });
+    prev.addEventListener('click', () => {
+      const atStart = grid.scrollLeft <= 4;
+      if (atStart) {
+        grid.scrollTo({ left: grid.scrollWidth, behavior: 'smooth' });
+      } else {
+        grid.scrollBy({ left: -cardStep(), behavior: 'smooth' });
+      }
+    });
     grid.addEventListener('scroll', update);
     window.addEventListener('resize', update);
     update();
   });
 
-  const form = document.getElementById('contact-form');
-  if (form) {
-    form.addEventListener('submit', function(e) {
-      const action = form.getAttribute('action');
-      if (action && action.includes('YOUR_FORM_ID')) {
-        e.preventDefault();
-        alert('Formulaire non configuré. Remplacez YOUR_FORM_ID par votre identifiant Formspree.');
-        return;
+
+  // Hamburger menu
+  const navbar = document.querySelector('.navbar');
+  const burger = document.querySelector('.nav-burger');
+  if (burger && navbar) {
+    burger.addEventListener('click', () => {
+      const isOpen = navbar.classList.toggle('nav-open');
+      burger.setAttribute('aria-expanded', isOpen);
+    });
+    document.addEventListener('click', (e) => {
+      if (!navbar.contains(e.target)) {
+        navbar.classList.remove('nav-open');
+        burger.setAttribute('aria-expanded', 'false');
       }
-      e.preventDefault();
-      fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
-        .then(r => { if (r.ok) { form.reset(); document.getElementById('form-success').style.display = 'block'; } });
+    });
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        navbar.classList.remove('nav-open');
+        burger.setAttribute('aria-expanded', 'false');
+      });
     });
   }
 </script>
